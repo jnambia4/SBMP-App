@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>JIRA Shuttle Bus Management Application</title>
+    <meta name="description" content="" />
+    <link
+        href="assets/css/w3.css"
+        rel="stylesheet">
+    <link
+        href="assets/css/styles.css"
+        rel="stylesheet">
+    <link
+        href="assets/css/gradients.css"
+        rel="stylesheet">
+</head>
+
+<body class="w3-responsive">
+    <div class="wrapper">
+        <header class="w3-container">
+            <nav class="website-nav">
+                <ul>
+                    <li><a class="home-link w3-btn w3-card" href="/Prod/homepage">Home</a></li>
+                    <li><a class="w3-btn w3-card" href="#">About</a></li>
+                    <li><a class="w3-btn w3-card" href="#">Contact</a></li>
+                    <li class="w3-dropdown-hover">
+                        <button class="w3-btn w3-card">Services</button>
+                        <div class="w3-dropdown-content w3-bar-block w3-border">
+                            <a href="/Prod/profilemgmt" class="w3-bar-item w3-button w3-medium">View Profile</a>
+                            <a href="/Prod/routesearch" class="w3-bar-item w3-button w3-medium">Search Routes</a>
+                            <a id="routemgmtlink" href="#" class="w3-bar-item w3-button w3-medium">Manage Routes (Coming Soon...)</a>
+                            <a id="sptagginglink" href="/Prod/sptagging" class="w3-bar-item w3-button w3-medium">Tag Service
+                                Providers</a>
+                        </div>
+                    </li>
+                    <div>
+                        <li><a class="w3-btn w3-card" id="signoutlink" href="#">SignOut</a></li>
+                    </div>
+                    <div>
+                        <li><a class="w3-btn w3-card" id="viewprofile" href="/Prod/profilemgmt"></a></li>
+                    </div>
+                </ul>
+            </nav>
+        </header>
+
+        <div class="w3-container page-content">
+            <div class="w3-padding">
+                <h4>Service Providers tagged to your profile</h4>
+                <div id="results" class="w3-responsive">
+                </div>
+                <br><br>
+
+                <h4>Add Service Providers</h4>
+                <input id="svcpradd" style="width: 40ch" list="svcprstoadd" placeholder="Service Provider"
+                    onfocus="makeEmpty(this)">
+                <datalist id="svcprstoadd"></datalist>
+                <input type="button" class="w3-btn w3-card w3-large w3-border w3-round" onclick="add()" value="Add">
+                <input type="button" class="w3-btn w3-card w3-large w3-border w3-round" onclick="resetAdd()"
+                    value="Reset">
+                <br><br><br>
+
+                <h4>Remove Service Providers</h4>
+                <input id="svcprdel" style="width: 40ch" list="svcprstodel" placeholder="Service Provider"
+                    onfocus="makeEmpty(this)">
+                <datalist id="svcprstodel"></datalist>
+                <input type="button" class="w3-btn w3-card w3-large w3-border w3-round" onclick="remove()"
+                    value="Remove">
+                <input type="button" class="w3-btn w3-card w3-large w3-border w3-round" onclick="resetDel()"
+                    value="Reset">
+            </div>
+        </div>
+    </div>
+
+    <script
+        src="assets/js/set-background.js"></script>
+    <script
+        src="assets/js/amazon-cognito-identity.min.js"></script>
+    <script
+        src="assets/js/sbmp-config.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        $('body').hide();
+        $('#routemgmtlink').hide(); // No page, so dummy URL
+        $('#sptagginglink').hide();
+
+        $('#viewprofile').hide();
+        $('#signoutlink').prop("href", logoutURL);
+
+        var userid = sessionStorage.getItem("userid");
+        var userrole = sessionStorage.getItem("userrole");
+
+        if (userrole == 'B')
+            $('#routemgmtlink').show();
+
+        if (userrole == 'P')
+            $('#sptagginglink').show();
+
+        var auth = sessionStorage.getItem("loggedIn");
+        var data = {
+            UserPoolId: config.cognitoUserPoolId,
+            ClientId: config.cognitoClientId
+        };
+        var userPool = new AmazonCognitoIdentity.CognitoUserPool(data);
+        var cognitoUser = userPool.getCurrentUser();
+
+        if (auth && cognitoUser != null) {
+            cognitoUser.getSession(function (err, session) {
+                if (err) {
+                    // alert(err);
+                    alert("You're session has expired. Please login again.");
+                    window.location.href = loginURL;
+                    return;
+                }
+                console.log('session validity: ' + session.isValid());
+
+                if (session.isValid()) {
+                    $('#signoutlink').click(function () {
+                        cognitoUser.signOut();
+                        window.location.href = logoutURL;
+                    });
+
+                    $('#viewprofile').text('Hi ' + userid + '!');
+                    $('#viewprofile').show();
+
+                    $("body").show();
+
+                    $(document).ready(function () {
+                        //Get the list of all Service Providers in the system
+                        var API_URL = backendURL + '/sptagging/svcproviders/json/-';
+                        $.ajax
+                            (
+                                {
+                                    type: 'GET',
+                                    url: API_URL,
+                                    success: function (data) {
+                                        if (data.length > 0) {
+                                            $("body").data("svcprds", data);
+                                            repopulate();
+                                        }
+                                    }
+                                }
+                            )
+                    });
+                }
+                else {
+                    alert("You're session has expired. Please login again.");
+                    window.location.href = loginURL;
+                }
+            });
+        }
+        else {
+            alert("You're session has expired. Please login again.");
+            window.location.href = loginURL;
+        }
+
+        function repopulate() {
+            $("#svcprstodel").empty();
+            $("#svcprstoadd").empty();
+            resetDel()
+            resetAdd()
+            document.getElementById("results").innerHTML = "";
+
+            var API_URL = backendURL + '/sptagging/json/' + userid;
+            $.ajax
+                (
+                    {
+                        type: 'GET',
+                        url: API_URL,
+                        success: function (data) {
+                            var total = $("body").data("svcprds");
+                            console.log(total);
+                            $("body").data("sptaggingresults", data);
+                            console.log(data);
+                            var html = getHtmlTableFromJSON(data);
+                            //console.log(html);
+                            document.getElementById("results").innerHTML = html;
+
+                            if (data.length > 0) {
+                                //ServiceProviders to Delete
+                                var svcprtodel = data;
+                                console.log(svcprtodel);
+                                var op = svcprtodel.map(function (item) {
+                                    return [item.ServiceProviderId, item.ServiceProviderName];
+                                });
+                                for (let item of op) {
+                                    $("#svcprstodel").append($("<option value=" + item[0] + ">" + item[1] + "</option>"));
+                                }
+
+                                //ServiceProviders to Add
+                                if (svcprtodel.length > 0) {
+                                    var opDel = svcprtodel.map(function (item) {
+                                        return item.ServiceProviderId;
+                                    });
+                                    var opTotal = total.map(function (item) {
+                                        return item.ServiceProviderId;
+                                    });
+                                    var opAdd = opTotal.diff(opDel);
+
+                                    var svcprtoadd = [];
+                                    console.log(svcprtoadd);
+                                    for (let i of opAdd) {
+                                        var row = total.filter(function (item) {
+
+                                            return item.ServiceProviderId == i;
+                                        });
+                                        console.log(row[0]);
+                                        svcprtoadd.push(row[0]);
+                                        console.log(svcprtoadd);
+                                    }
+                                    console.log(svcprtoadd);
+                                    var op = svcprtoadd.map(function (item) {
+                                        return [item.ServiceProviderId, item.ServiceProviderName];
+                                    });
+                                    for (let item of op) {
+                                        $("#svcprstoadd").append($("<option value=" + item[0] + ">" + item[1] + "</option>"));
+                                    }
+                                }
+                            }
+                            else {
+                                var svcprtoadd = total;
+                                var op = svcprtoadd.map(function (item) {
+                                    return [item.ServiceProviderId, item.ServiceProviderName];
+                                });
+                                for (let item of op) {
+                                    $("#svcprstoadd").append($("<option value=" + item[0] + ">" + item[1] + "</option>"));
+                                }
+                            }
+                        }
+                    }
+                )
+        }
+
+        function add() {
+            var requestArray = {
+                "p01_PassengerUserId": userid,
+                "p02_SvcPrId": document.getElementById("svcpradd").value,
+                "p03_CreatedBy": "sbmpsptagging"
+            };
+            var requestJson = JSON.stringify(requestArray);
+
+            var idToken = localStorage.getItem("CognitoIdentityServiceProvider." + config.cognitoClientId + "." + userid + ".idToken");
+            var API_URL = backendURL + '/sptagging';
+            $.ajax
+                (
+                    {
+                        type: 'POST',
+                        url: API_URL,
+                        headers: { 'Authorization': idToken },
+                        data: requestJson,
+                        success: function (data) {
+                            console.log(data);
+                            repopulate();
+                        }
+                    }
+                )
+        }
+
+        function remove() {
+            var requestArray = {
+                "p01_PassengerUserId": userid,
+                "p02_SvcPrId": document.getElementById("svcprdel").value
+            };
+            var requestJson = JSON.stringify(requestArray);
+
+            var idToken = localStorage.getItem("CognitoIdentityServiceProvider." + config.cognitoClientId + "." + userid + ".idToken");
+            var API_URL = backendURL + '/sptagging';
+            $.ajax
+                (
+                    {
+                        type: 'DELETE',
+                        url: API_URL,
+                        headers: { 'Authorization': idToken },
+                        data: requestJson,
+                        success: function (data) {
+                            console.log(data);
+                            repopulate();
+                        }
+                    }
+                )
+        }
+
+        function resetAdd() {
+            makeEmpty(document.getElementById("svcpradd"));
+        }
+
+        function resetDel() {
+            makeEmpty(document.getElementById("svcprdel"));
+        }
+
+        function makeEmpty(x) {
+            x.value = "";
+        }
+
+        Array.prototype.diff = function (a) {
+            return this.filter(function (i) { return a.indexOf(i) < 0; });
+        };
+
+        function getHtmlTableFromJSON(data) {
+            var html = "";
+            if (data.length === 0)
+                html += "<h5>No matching Service Providers found!<\/h3>";
+
+            else {
+                var keys = Object.keys(data[0]);
+                html += "<body><table border = '3' class='w3-table-all w3-hoverable w3-text-black w3-medium'>";
+
+                // header
+                html += "<thead><tr>";
+                for (var i = 0; i < keys.length; i++) {
+                    if (keys[i] == 'ServiceProviderType')
+                        continue;
+                    html += "<th>" + keys[i] + "<\/th>";
+                }
+                html += "<\/tr><\/thead><tbody>";
+
+                //table
+                for (var i = 0; i < data.length; i++) {
+                    html += "<tr>";
+                    for (var j = 0; j < keys.length; j++) {
+                        if (keys[j] == 'ServiceProviderType')
+                            continue;
+                        var checkNull = !data[i][keys[j]];
+                        html += "<td>" + (checkNull ? '' : data[i][keys[j]]) + "<\/td>";
+                    }
+                    html += "<\/tr>";
+                }
+                html += "<\/tbody><\/table>";
+            }
+
+            //console.log(html);
+            return html;
+        }
+    </script>
+</body>
+
+</html>

@@ -11,7 +11,7 @@ html {
   padding: 0;
   font-family: "Helvetica Neue", Roboto, Arial, sans-serif;
   font-size: 62.5%;
-  color: white;
+  /* color: white; */
   background: linear-gradient(to bottom, #2473ab 0%,#1e528e 70%,#5b7983 100%);
 }
 
@@ -19,8 +19,9 @@ body {
   font-size: 1.8rem;
 }
 
-h1, h2, h3 {
+h1, h2, h3, h4, h5, h6 {
   font-weight: normal;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif
 }
 
 h1 {
@@ -29,8 +30,12 @@ h1 {
 }
 
 a {
-  color: white;
+  /* color: white; */
   text-decoration: none;
+}
+
+label {
+  font-size: 140%;
 }
 
 .wrapper {
@@ -42,7 +47,7 @@ a {
 }
 
 footer, .push {
-  height: 7rem;
+  /* height: 7rem; */
 }
 
 footer .footer-contents {
@@ -52,7 +57,7 @@ footer .footer-contents {
 
 .website-nav {
   position: relative;
-  padding: 5rem;
+  padding: 0 5rem;
 }
 
 .website-nav ul {
@@ -67,8 +72,14 @@ footer .footer-contents {
   line-height: 21px;
 }
 
+.website-nav ul div li {
+  float: right;
+  padding: 0.5rem 2rem 0.5rem 0;
+  line-height: 21px;
+}
+
 .website-nav ul li a {
-  color: white;
+  /* color: white; */
   text-decoration: none;
 }
 
@@ -94,7 +105,9 @@ footer .footer-contents {
 }
 
 .message .text {
-  float: left;
+  float: right;
+  padding: 10rem 10rem;
+  width: auto;
 }
 
 .message:after, .website-nav:after {
@@ -123,6 +136,8 @@ footer .footer-contents {
 
 .page-content {
   padding: 1rem 5rem;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  font-size: 80%
 }
 
 .page-content p {

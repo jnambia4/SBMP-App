@@ -20,11 +20,16 @@ Globals:
     AutoPublishAlias: live
     DeploymentPreference:
       Enabled: true
-      Type: Canary10Percent5Minutes
+      Type: AllAtOnce
       Role: !Ref CodeDeployRole
+  Api:
+    EndpointConfiguration: REGIONAL
+    Cors:
+      AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+      AllowOrigin: "'*'"
 
 Resources:
-  GetHelloWorld:
+  IndexUI:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.get
@@ -38,6 +43,82 @@ Resources:
           Type: Api
           Properties:
             Path: /
+            Method: get
+  LandingUI:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: landing.get
+      Runtime: nodejs8.10
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+      Events:
+        GetEvent:
+          Type: Api
+          Properties:
+            Path: /landing
+            Method: get
+
+  HomePageUI:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: homepage.get
+      Runtime: nodejs8.10
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+      Events:
+        GetEvent:
+          Type: Api
+          Properties:
+            Path: /homepage
+            Method: get
+  RouteSearchUI:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: routesearch/index.get
+      Runtime: nodejs8.10
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+      Events:
+        GetEvent:
+          Type: Api
+          Properties:
+            Path: /routesearch
+            Method: get
+  UserProfileUI:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: profilemgmt/index.get
+      Runtime: nodejs8.10
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+      Events:
+        GetEvent:
+          Type: Api
+          Properties:
+            Path: /profilemgmt
+            Method: get
+  SPTaggingUI:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: sptagging/index.get
+      Runtime: nodejs8.10
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+      Events:
+        GetEvent:
+          Type: Api
+          Properties:
+            Path: /sptagging
             Method: get
   LambdaExecutionRole:
     Description: Creating service role in IAM for AWS Lambda

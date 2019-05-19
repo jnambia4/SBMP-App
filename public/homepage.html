@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>JIRA Shuttle Bus Management Application</title>
+    <meta name="description" content="" />
+    <link
+        href="assets/css/w3.css"
+        rel="stylesheet">
+    <link
+        href="assets/css/styles.css"
+        rel="stylesheet">
+    <link
+        href="assets/css/gradients.css"
+        rel="stylesheet">
+</head>
+
+<body class="w3-responsive">
+    <div class="wrapper">
+        <header class="w3-container">
+            <nav class="website-nav">
+                <ul>
+                    <li><a class="home-link w3-btn w3-card" href="/Prod/homepage">Home</a></li>
+                    <li><a class="w3-btn w3-card" href="#">About</a></li>
+                    <li><a class="w3-btn w3-card" href="#">Contact</a></li>
+                    <div>
+                        <li><a class="w3-btn w3-card" id="signoutlink" href="#">SignOut</a></li>
+                    </div>
+                    <div>
+                        <li><a class="w3-btn w3-card" id="viewprofile" href="/Prod/profilemgmt"></a></li>
+                    </div>
+                </ul>
+            </nav>
+        </header>
+
+        <div class="w3-container page-content">
+            <br>
+            <h2 class="w3-padding">Welcome to the JIRA Shuttle Bus Management Application</h2><br><br>
+            <p class="w3-padding">
+                <a class="w3-xlarge w3-btn w3-card" href="/Prod/profilemgmt">View Profile</a>
+            </p>
+            <p class="w3-padding">
+                <a class="w3-xlarge w3-btn w3-card" href="/Prod/routesearch">Search Routes</a>
+            </p>
+            <p class="w3-padding" id="routemgmt">
+                <a class="w3-xlarge w3-btn w3-card" id="routemgmtlink" href="#">Manage Routes&nbsp;&nbsp;</a>
+                <code class="w3-large w3-tag w3-grey">Coming Soon...</code>
+            </p>
+            <p class="w3-padding">
+                <a class="w3-xlarge w3-btn w3-card" id="sptagginglink" href="/Prod/sptagging">Tag Service Providers</a>
+            </p>
+        </div>
+    </div>
+
+    <script
+        src="assets/js/set-background.js"></script>
+    <script
+        src="assets/js/amazon-cognito-identity.min.js"></script>
+    <script
+        src="assets/js/sbmp-config.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script type="text/javascript">
+        $('body').hide();
+        $('#routemgmt').hide(); // No page, so dummy URL
+        $('#sptagginglink').hide();
+
+        $('#viewprofile').hide();
+        $('#signoutlink').prop("href", logoutURL);
+
+        var userid = sessionStorage.getItem("userid");
+        var userrole = sessionStorage.getItem("userrole");
+        var svcprtype = sessionStorage.getItem("svcprtype");
+
+        var auth = sessionStorage.getItem("loggedIn");
+        var data = {
+            UserPoolId: config.cognitoUserPoolId,
+            ClientId: config.cognitoClientId
+        };
+        var userPool = new AmazonCognitoIdentity.CognitoUserPool(data);
+        var cognitoUser = userPool.getCurrentUser();
+
+        if (auth && cognitoUser != null) {
+            cognitoUser.getSession(function (err, session) {
+                if (err) {
+                    // alert(err);
+                    alert("You're session has expired. Please login again.");
+                    window.location.href = loginURL;
+                    return;
+                }
+                console.log('session validity: ' + session.isValid());
+
+                if (session.isValid()) {
+                    $('#signoutlink').click(function () {
+                        cognitoUser.signOut();
+                        window.location.href = logoutURL;
+                    });
+
+                    $('#viewprofile').text('Hi ' + userid + '!');
+                    $('#viewprofile').show();
+
+                    if (userrole == 'B')
+                        $('#routemgmt').show();
+
+                    if (userrole == 'P')
+                        $('#sptagginglink').show();
+
+                    $("body").show();
+
+                    var idToken = localStorage.getItem("CognitoIdentityServiceProvider." + config.cognitoClientId + "." + userid + ".idToken");
+
+                    cognitoUser.getUserAttributes(function (err, result) {
+                        if (err) {
+                            alert(err);
+                            return;
+                        }
+
+                        var checkRole = false;
+                        var roleAttribute = 'custom:userrole';
+                        var svcprAttribute = 'custom:svcprtype';
+                        var attributeArray = {
+                            "p01_UserId": userid,
+                            "p02_UserRole": "",
+                            "p03_SvcPrType": "",
+                            "p04_UserName": "",
+                            "p05_UserDOB": "",
+                            "p06_UserPhone": "",
+                            "p07_UserEmail": "",
+                            "p08_UserAddress": "",
+                            "p09_CreatedBy": "sbmpsignup"
+                        };
+                        console.log(result);
+
+                        for (i = 0; i < result.length; i++) {
+                            var attributeName = result[i].getName();
+                            var attributeValue = result[i].getValue();
+                            var spColName;
+
+                            console.log('attribute ' + attributeName + ' has value ' + attributeValue);
+                            switch (attributeName) {
+                                case roleAttribute:
+                                    spColName = "p02_UserRole";
+                                    checkRole = true;
+                                    break;
+                                case svcprAttribute:
+                                    spColName = "p03_SvcPrType";
+                                    checkRole = true;
+                                    break;
+                                case "name":
+                                    spColName = "p04_UserName";
+                                    break;
+                                case "phone_number":
+                                    spColName = "p06_UserPhone";
+                                    break;
+                                case "email":
+                                    spColName = "p07_UserEmail";
+                                    break;
+                                case "address":
+                                    spColName = "p08_UserAddress"
+                                    break;
+                                default:
+                                    spColName = "";
+                            }
+
+                            if (spColName != "")
+                                attributeArray[spColName] = attributeValue;
+                        }
+                        console.log(attributeArray);
+                        console.log(checkRole);
+
+                        // if user is newly created in Cognito and doesnt have user role
+                        if (!checkRole) {
+                            var attributeList = [];
+                            var attribute1 = {
+                                Name: roleAttribute,
+                                Value: userrole
+                            };
+                            var attribute11 = new AmazonCognitoIdentity.CognitoUserAttribute(attribute1);
+                            attributeList.push(attribute11);
+                            console.log(attribute11);
+                            var attribute2 = {
+                                Name: svcprAttribute,
+                                Value: svcprtype
+                            };
+                            var attribute22 = new AmazonCognitoIdentity.CognitoUserAttribute(attribute2);
+                            attributeList.push(attribute22);
+                            console.log(attribute22);
+                            cognitoUser.updateAttributes(attributeList, function (err, result) {
+                                if (err) {
+                                    alert(err);
+                                    return;
+                                }
+                                console.log('call result: ' + result);
+                                console.log('attribute ' + roleAttribute + ' has value ' + userrole);
+                                attributeArray["p02_UserRole"] = userrole;
+                                console.log('attribute ' + svcprAttribute + ' has value ' + svcprtype);
+                                attributeArray["p03_SvcPrType"] = svcprtype;
+
+                                // if the user is also not found in backend database then create it
+                                if (sessionStorage.getItem("userFound") != "true") {
+                                    console.log(attributeArray);
+
+                                    var API_URL = backendURL + '/profilemgmt';
+                                    var attributeJson = JSON.stringify(attributeArray);
+                                    console.log(attributeJson);
+                                    $.ajax
+                                        (
+                                            {
+                                                type: 'POST',
+                                                url: API_URL,
+                                                headers: { 'Authorization': idToken },
+                                                data: attributeJson,
+                                                success: function (data) {
+                                                    sessionStorage.setItem("userFound", "true");
+                                                    if (data.length > 0) {
+                                                        $("body").data("addprofile", data);
+                                                        console.log(data);
+                                                    }
+                                                }
+                                            }
+                                        )
+                                }
+                            });
+                        }
+                        // if user is already created in Cognito and user role is set but user is missing from backend db
+                        else {
+                            if (sessionStorage.getItem("userFound") != "true") {
+                                console.log(attributeArray);
+
+                                var API_URL = backendURL + '/profilemgmt';
+                                var attributeJson = JSON.stringify(attributeArray);
+                                console.log(attributeJson);
+                                $.ajax
+                                    (
+                                        {
+                                            type: 'POST',
+                                            url: API_URL,
+                                            headers: { 'Authorization': idToken },
+                                            data: attributeJson,
+                                            success: function (data) {
+                                                sessionStorage.setItem("userFound", "true");
+                                                if (data.length > 0) {
+                                                    $("body").data("addprofile", data);
+                                                    console.log(data);
+                                                }
+                                            }
+                                        }
+                                    )
+                            }
+                        }
+                    });
+                }
+                else {
+                    alert("You're session has expired. Please login again.");
+                    window.location.href = loginURL;
+                }
+            });
+        }
+        else {
+            alert("You're session has expired. Please login again.");
+            window.location.href = loginURL;
+        }
+    </script>
+</body>
+
+</html>

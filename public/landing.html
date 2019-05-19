@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>JIRA Shuttle Bus Management Application</title>
+    <meta name="description" content="" />
+    <link
+        href="assets/css/w3.css"
+        rel="stylesheet">
+    <link
+        href="assets/css/styles.css"
+        rel="stylesheet">
+    <link
+        href="assets/css/gradients.css"
+        rel="stylesheet">
+</head>
+
+<body class="w3-responsive">
+    <div class="wrapper">
+        <header class="w3-container">
+            <nav class="website-nav">
+                <ul>
+                    <li><a class="home-link w3-btn w3-card" href="#">Home</a></li>
+                    <li><a class="w3-btn w3-card" href="#">About</a></li>
+                    <li><a class="w3-btn w3-card" href="#">Contact</a></li>
+                    <div>
+                        <li><a class="w3-btn w3-card" id="signoutlink" href="#">SignOut</a></li>
+                    </div>
+                </ul>
+            </nav>
+        </header>
+
+        <div class="w3-container page-content">
+            <p class="w3-padding" id="userroles">
+            </p>
+            <p class="w3-padding" id="svcprtypes">
+            </p>
+            <p class="w3-padding" id="submitbtnp">
+            </p>
+        </div>
+    </div>
+
+    <script
+        src="assets/js/set-background.js"></script>
+    <script
+        src="assets/js/amazon-cognito-auth.min.js"></script>
+    <script
+        src="assets/js/sbmp-config.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script type="text/javascript">
+        $('body').hide();
+        var authData = {
+            ClientId: config.cognitoClientId, // Your client id here
+            AppWebDomain: config.cognitoDomainURL,
+            TokenScopesArray: config.cognitoTokenScopes,
+            RedirectUriSignIn: frontendURL,
+            RedirectUriSignOut: logoutURL,
+            UserPoolId: config.cognitoUserPoolId // Your user pool id here
+        };
+
+        var auth = new AmazonCognitoIdentity.CognitoAuth(authData);
+        auth.userhandler = {
+            onSuccess: function (result) {
+                // alert("Sign in success");
+                storeAuthDetails();
+                decideNextStep(auth);
+            },
+            onFailure: function (err) {
+                alert("Error!");
+            }
+        };
+
+        var curUrl = window.location.href;
+        auth.parseCognitoWebResponse(curUrl);
+
+        if (!auth || !(auth.getSignInUserSession().isValid())) {
+            alert("You're session has expired. Please login again.");
+            window.location.href = loginURL;
+        }
+
+        function storeAuthDetails() {
+            sessionStorage.clear();
+            // sessionStorage.setItem("authUrl", curUrl);
+            sessionStorage.setItem("userid", auth.getUsername());
+            sessionStorage.setItem("loggedIn", "true");
+            // alert(sessionStorage.getItem("userid"));
+        }
+
+        function decideNextStep(auth) {
+            var userid = sessionStorage.getItem("userid");
+            var idToken = localStorage.getItem("CognitoIdentityServiceProvider." + config.cognitoClientId + "." + userid + ".idToken");
+            var API_URL = backendURL + '/profilemgmt/json/' + userid;
+            $.ajax
+                (
+                    {
+                        type: 'GET',
+                        url: API_URL,
+                        headers: { 'Authorization': idToken },
+                        success: function (data) {
+                            if (data.length === 0) {
+                                $('body').show();
+                                $('#signoutlink').prop("href", logoutURL);
+
+                                sessionStorage.removeItem("userFound");
+                                setUserRole();
+                            }
+                            else {
+                                $("body").data("userdetails", data[0]);
+                                var userrole = data[0].UserRole;
+                                sessionStorage.setItem("userFound", "true");
+                                sessionStorage.setItem("userrole", userrole);
+                                sessionStorage.setItem("userprofile", JSON.stringify(data[0]));
+                                window.location.replace('/Prod/homepage');
+                            }
+                        }
+                    }
+                )
+        }
+
+        function setUserRole() {
+            var API_URL = backendURL + '/profilemgmt/userroles';
+            $.ajax
+                (
+                    {
+                        type: 'GET',
+                        url: API_URL,
+                        success: function (userRolesObj) {
+                            if (userRolesObj.length > 0) {
+                                $("body").data("userrolelist", userRolesObj);
+                                var htmlText = "<br><h3>Please select the user role for first time user registration</h3><br>"
+                                htmlText += "<h6>Note: Once the user role is submitted, it cannot be modified.</h6><br>"
+                                var html = $(htmlText);
+                                html.appendTo('#userroles');
+
+                                for (var i = 0; i < userRolesObj.length; i++) {
+                                    var text = '<label class="w3-btn"><input type="radio" name="userrole" onchange=toggleSvcPrTypes() value="' + userRolesObj[i].UserRole + '"> ' + userRolesObj[i].UserDesc + '</label><br><br>';
+                                    var radioBtn = $(text);
+                                    radioBtn.appendTo('#userroles');
+                                }
+
+                                setSvcPrType();
+                            }
+                        }
+                    }
+                )
+        }
+
+        function setSvcPrType() {
+            var API_URL = backendURL + '/profilemgmt/svcprtypes';
+            $.ajax
+                (
+                    {
+                        type: 'GET',
+                        url: API_URL,
+                        success: function (svcPrTypesObj) {
+                            if (svcPrTypesObj.length > 0) {
+                                $("body").data("svcprtypelist", svcPrTypesObj);
+                                var htmlText = "<br><h3>Please select the type of Service Provider</h3><br>"
+                                var html = $(htmlText);
+                                html.appendTo('#svcprtypes');
+
+                                for (var i = 0; i < svcPrTypesObj.length; i++) {
+                                    var text = '<label class="w3-btn"><input type="radio" name="svcprtype" value="' + svcPrTypesObj[i].SvcPrType + '"> ' + svcPrTypesObj[i].SvcPrTypeName + '</label><br><br>';
+                                    var radioBtn = $(text);
+                                    radioBtn.appendTo('#svcprtypes');
+                                }
+
+                                $("input[name='svcprtype']").prop('disabled', true);
+                                $("#svcprtypes").hide();
+
+                                var button = $('<button id="submitButton" class="w3-btn w3-card w3-xlarge w3-border w3-round" onclick=submitFunction()>Submit</button>')
+                                button.appendTo('#submitbtnp')
+                            }
+                        }
+                    }
+                )
+        }
+
+        function toggleSvcPrTypes() {
+            var radioValue = $("input[name='userrole']:checked").val();
+            if (radioValue == 'S') {
+                $("input[name='svcprtype']").prop('disabled', false);
+                $("#svcprtypes").show();
+            }
+            else {
+                $("input[name='svcprtype']").prop('disabled', true);
+                $("input[name='svcprtype']").prop('checked', false);
+                $("#svcprtypes").hide();
+            }
+        }
+
+        function submitFunction() {
+            var roleValue = $("input[name='userrole']:checked").val();
+            var roleText = $("input[name='userrole']:checked").parent('label').text();
+
+            var svcPrValue = $("input[name='svcprtype']:checked").val();
+            var svcPrText = $("input[name='svcprtype']:checked").parent('label').text();
+
+            if (roleValue) {
+                if (roleValue != 'S') {
+                    if (confirm("Your selected user role is " + roleText + ". Confirm?")) {
+                        sessionStorage.setItem("userrole", roleValue);
+                        window.location.replace('/Prod/homepage');
+                    }
+                }
+                else {
+                    if (svcPrValue) {
+                        if (confirm("Your selected user role is " + roleText + " and your type is " + svcPrText + ". Confirm?")) {
+                            sessionStorage.setItem("userrole", roleValue);
+                            sessionStorage.setItem("svcprtype", svcPrValue);
+                            window.location.replace('/Prod/homepage');
+                        }
+                    }
+                    else
+                        alert("Service Provider type is not selected");
+
+                }
+            }
+            else
+                alert("No option has been selected");
+        }
+    </script>
+</body>
+
+</html>

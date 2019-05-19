@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>JIRA Shuttle Bus Management Application</title>
+    <meta name="description" content="" />
+    <link
+        href="assets/css/w3.css"
+        rel="stylesheet">
+    <link
+        href="assets/css/styles.css"
+        rel="stylesheet">
+    <link
+        href="assets/css/gradients.css"
+        rel="stylesheet">
+</head>
+
+<body class="w3-responsive">
+    <header class="w3-container">
+        <nav class="website-nav">
+            <ul>
+                <li><a class="home-link w3-btn w3-card" href="/Prod/homepage">Home</a></li>
+                <li><a class="w3-btn w3-card" href="#">About</a></li>
+                <li><a class="w3-btn w3-card" href="#">Contact</a></li>
+                <li class="w3-dropdown-hover">
+                    <button class="w3-btn w3-card">Services</button>
+                    <div class="w3-dropdown-content w3-bar-block w3-border">
+                        <a href="/Prod/profilemgmt" class="w3-bar-item w3-button w3-medium">View Profile</a>
+                        <a href="/Prod/routesearch" class="w3-bar-item w3-button w3-medium">Search Routes</a>
+                        <a id="routemgmtlink" href="#" class="w3-bar-item w3-button w3-medium">Manage Routes (Coming Soon...)</a>
+                        <a id="sptagginglink" href="/Prod/sptagging" class="w3-bar-item w3-button w3-medium">Tag Service
+                            Providers</a>
+                    </div>
+                </li>
+                <div>
+                    <li><a class="w3-btn w3-card" id="signoutlink" href="#">SignOut</a></li>
+                </div>
+                <div>
+                    <li><a class="w3-btn w3-card" id="viewprofile" href="/Prod/profilemgmt"></a></li>
+                </div>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="w3-container page-content">
+        <h4 class="w3-padding">User Profile</h4><br>
+        <div id="results" class="w3-responsive w3-padding"></div>
+    </div>
+
+    <script
+        src="assets/js/set-background.js"></script>
+    <script
+        src="assets/js/amazon-cognito-identity.min.js"></script>
+    <script
+        src="assets/js/sbmp-config.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        $('body').hide();
+        $('#routemgmtlink').hide(); // No page, so dummy URL
+        $('#sptagginglink').hide();
+
+        $('#viewprofile').hide();
+        $('#signoutlink').prop("href", logoutURL);
+
+        var userid = sessionStorage.getItem("userid");
+        var userrole = sessionStorage.getItem("userrole");
+
+        if (userrole == 'B')
+            $('#routemgmtlink').show();
+
+        if (userrole == 'P')
+            $('#sptagginglink').show();
+
+        var auth = sessionStorage.getItem("loggedIn");
+        var data = {
+            UserPoolId: config.cognitoUserPoolId,
+            ClientId: config.cognitoClientId
+        };
+        var userPool = new AmazonCognitoIdentity.CognitoUserPool(data);
+        var cognitoUser = userPool.getCurrentUser();
+
+        if (auth && cognitoUser != null) {
+            cognitoUser.getSession(function (err, session) {
+                if (err) {
+                    // alert(err);
+                    alert("You're session has expired. Please login again.");
+                    window.location.href = loginURL;
+                    return;
+                }
+                console.log('session validity: ' + session.isValid());
+
+                if (session.isValid()) {
+                    var userprofile = JSON.parse(sessionStorage.getItem("userprofile"));
+                    var idToken = localStorage.getItem("CognitoIdentityServiceProvider." + config.cognitoClientId + "." + userid + ".idToken");
+
+                    if (!userprofile) /*not required here as this page will never be accessible without homepage first*/ {
+                        var API_URL = backendURL + '/profilemgmt/json/' + userid;
+                        $.ajax
+                            (
+                                {
+                                    type: 'GET',
+                                    url: API_URL,
+                                    headers: { 'Authorization': idToken },
+                                    success: function (data) {
+                                        if (data.length > 0) {
+                                            $("body").data("userdetails", data[0]);
+                                            var userrole = data[0].UserRole;
+                                            sessionStorage.setItem("userFound", "true");
+                                            sessionStorage.setItem("userprofile", JSON.stringify(data[0]));
+                                            userprofile = data[0];
+                                            display(userprofile);
+                                        }
+                                    }
+                                }
+                            )
+                    }
+                    else
+                        display(userprofile);
+                }
+                else {
+                    alert("You're session has expired. Please login again.");
+                    window.location.href = loginURL;
+                }
+            });
+        }
+        else {
+            alert("You're session has expired. Please login again.");
+            window.location.href = loginURL;
+        }
+
+        function display(userprofile) {
+            $('#signoutlink').click(function () {
+                cognitoUser.signOut();
+                window.location.href = logoutURL;
+            });
+
+            $('#viewprofile').text('Hi ' + userid + '!');
+            $('#viewprofile').show();
+
+            $("body").show();
+
+            var html = "<table border='3' class='w3-table-all w3-hoverable'><tbody class='w3-text-black w3-large'>";
+            html += "<tr><th class='w3-quarter'>Name<\/th><td class='w3-threequarter'>" + (userprofile.UserName ? userprofile.UserName : "") + "<\/td><\/tr>";
+            html += "<tr><th class='w3-quarter'>Role<\/th><td class='w3-threequarter'>" + (userprofile.RoleName ? userprofile.RoleName : "") + "<\/td><\/tr>";
+            html += "<tr><th class='w3-quarter'>Email<\/th><td class='w3-threequarter'>" + (userprofile.UserEmail ? userprofile.UserEmail : "") + "<\/td><\/tr>";
+            html += "<tr><th class='w3-quarter'>Phone<\/th><td class='w3-threequarter'>" + (userprofile.UserPhone ? userprofile.UserPhone : "") + "<\/td><\/tr>";
+            html += "<tr><th class='w3-quarter'>Address<\/th><td class='w3-threequarter'>" + (userprofile.UserAddress ? userprofile.UserAddress : "") + "<\/td><\/tr>";
+            html += "<tr><th class='w3-quarter'>Date of Birth<\/th><td class='w3-threequarter'>" + (userprofile.UserDob ? userprofile.UserDob : "") + "<\/td><\/tr>";
+            html += "<tr><th class='w3-quarter'>SBMP User ID<\/th><td class='w3-threequarter'>" + (userprofile.UserId ? userprofile.UserId : "") + "<\/td><\/tr>";
+            html += "<tr><th class='w3-quarter'>Joined on<\/th><td class='w3-threequarter'>" + (userprofile.JoinDate ? userprofile.JoinDate : "") + "<\/td><\/tr>";
+            html += "<\/tbody><\/table>";
+
+            document.getElementById("results").innerHTML = html;
+        }
+    </script>
+</body>
+
+</html>

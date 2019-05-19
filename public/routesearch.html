@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>JIRA Shuttle Bus Management Application</title>
+    <meta name="description" content="" />
+    <link
+        href="assets/css/w3.css"
+        rel="stylesheet">
+    <link
+        href="assets/css/styles.css"
+        rel="stylesheet">
+    <link
+        href="assets/css/gradients.css"
+        rel="stylesheet">
+</head>
+
+<body class="w3-responsive">
+    <div class="wrapper">
+        <header class="w3-container">
+            <nav class="website-nav">
+                <ul>
+                    <li><a class="home-link w3-btn w3-card" href="/Prod/homepage">Home</a></li>
+                    <li><a class="w3-btn w3-card" href="#">About</a></li>
+                    <li><a class="w3-btn w3-card" href="#">Contact</a></li>
+                    <li class="w3-dropdown-hover">
+                        <button class="w3-btn w3-card">Services</button>
+                        <div class="w3-dropdown-content w3-bar-block w3-border">
+                            <a href="/Prod/profilemgmt" class="w3-bar-item w3-button w3-medium">View Profile</a>
+                            <a href="/Prod/routesearch" class="w3-bar-item w3-button w3-medium">Search Routes</a>
+                            <a id="routemgmtlink" href="#" class="w3-bar-item w3-button w3-medium">Manage Routes (Coming Soon...)</a>
+                            <a id="sptagginglink" href="/Prod/sptagging" class="w3-bar-item w3-button w3-medium">Tag Service
+                                Providers</a>
+                        </div>
+                    </li>
+                    <div>
+                        <li><a class="w3-btn w3-card" id="signoutlink" href="#">SignOut</a></li>
+                    </div>
+                    <div>
+                        <li><a class="w3-btn w3-card" id="viewprofile" href="/Prod/profilemgmt"></a></li>
+                    </div>
+                </ul>
+            </nav>
+        </header>
+
+        <div class="w3-container page-content">
+            <div class="w3-padding">
+                <h4>Filter columns</h4>
+                <input id="routeid" style="width: 10ch" list="routeids" placeholder="Route ID"
+                    onfocus="makeEmpty(this)">
+                <datalist id="routeids"></datalist>
+                <input id="busop" style="width: 40ch" list="busops" placeholder="Bus Operator"
+                    onfocus="makeEmpty(this)">
+                <datalist id="busops"></datalist>
+                <input id="bustype" style="width: 20ch" list="bustypes" placeholder="Bus Type"
+                    onfocus="makeEmpty(this)">
+                <datalist id="bustypes"></datalist>
+                <input id="svcpr" style="width: 40ch" list="svcprs" placeholder="Service Provider"
+                    onfocus="makeEmpty(this)">
+                <datalist id="svcprs"></datalist>
+                <input id="svcprtype" style="width: 20ch" list="svcprtypes" placeholder="Service Provider Type"
+                    onfocus="makeEmpty(this)">
+                <datalist id="svcprtypes"></datalist>
+                <input id="free" style="width: 8ch" list="frees" placeholder="Free?" onfocus="makeEmpty(this)">
+                <datalist id="frees"></datalist>
+                <input id="loop" style="width: 8ch" list="loops" placeholder="Loop?" onfocus="makeEmpty(this)">
+                <datalist id="loops"></datalist>
+                <input id="stage" style="width: 8ch" list="stages" placeholder="Stage" onfocus="makeEmpty(this)">
+                <datalist id="stages"></datalist>
+                <input id="stime" style="width: 11ch" list="stimes" placeholder="Start Time" onfocus="makeEmpty(this)">
+                <datalist id="stimes"></datalist>
+                <input id="source" style="width: 20ch" list="sources" placeholder="Source" onfocus="makeEmpty(this)">
+                <datalist id="sources"></datalist>
+                <input id="etime" style="width: 11ch" list="etimes" placeholder="End Time" onfocus="makeEmpty(this)">
+                <datalist id="etimes"></datalist>
+                <input id="dest" style="width: 20ch" list="dests" placeholder="Destination" onfocus="makeEmpty(this)">
+                <datalist id="dests"></datalist>
+
+                <br><br>
+                <p>
+                    <input type="button" class="w3-btn w3-card w3-large w3-border w3-round" onclick="go()"
+                        value="Filter">
+                    <input type="button" class="w3-btn w3-card w3-large w3-border w3-round" onclick="reset()"
+                        value="Reset">
+                </p>
+
+                <br>
+                <p>
+                    <h4>Routes tagged to your profile</h4>
+                    <div id="results" class="w3-responsive">
+                    </div>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script
+        src="assets/js/set-background.js"></script>
+    <script
+        src="assets/js/amazon-cognito-identity.min.js"></script>
+    <script
+        src="assets/js/sbmp-config.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        $('body').hide();
+        $('#routemgmtlink').hide(); // No page, so dummy URL
+        $('#sptagginglink').hide();
+
+        $('#viewprofile').hide();
+        $('#signoutlink').prop("href", logoutURL);
+
+        var userid = sessionStorage.getItem("userid");
+        var userrole = sessionStorage.getItem("userrole");
+
+        if (userrole == 'B')
+            $('#routemgmtlink').show();
+
+        if (userrole == 'P')
+            $('#sptagginglink').show();
+
+        var auth = sessionStorage.getItem("loggedIn");
+        var data = {
+            UserPoolId: config.cognitoUserPoolId,
+            ClientId: config.cognitoClientId
+        };
+        var userPool = new AmazonCognitoIdentity.CognitoUserPool(data);
+        var cognitoUser = userPool.getCurrentUser();
+
+        if (auth && cognitoUser != null) {
+            cognitoUser.getSession(function (err, session) {
+                if (err) {
+                    // alert(err);
+                    alert("You're session has expired. Please login again.");
+                    window.location.href = loginURL;
+                    return;
+                }
+                console.log('session validity: ' + session.isValid());
+
+                if (session.isValid()) {
+                    $('#signoutlink').click(function () {
+                        cognitoUser.signOut();
+                        window.location.href = logoutURL;
+                    });
+
+                    $('#viewprofile').text('Hi ' + userid + '!');
+                    $('#viewprofile').show();
+
+                    $("body").show();
+
+                    $(document).ready(function () {
+                        var requestArray = {
+                            "p01_Format": "json",
+                            "p02_UserRole": userrole,
+                            "p03_UserId": userid,
+                            "p04_RouteId": "",
+                            "p05_BusOpId": "",
+                            "p06_SvcPrId": "",
+                            "p07_BusType": "",
+                            "p08_SvcPrType": "",
+                            "p09_Free": "",
+                            "p10_Loop": "",
+                            "p11_SrcStop": "",
+                            "p12_DestStop": "",
+                            "p13_SrcTime": "",
+                            "p14_SrcTimeOp": "",
+                            "p15_DestTime": "",
+                            "p16_DestTimeOp": ""
+                        };
+                        var requestJson = JSON.stringify(requestArray);
+
+                        var API_URL = backendURL + '/routesearch';
+                        $.ajax
+                            (
+                                {
+                                    type: 'POST',
+                                    url: API_URL,
+                                    data: requestJson,
+                                    success: function (data) {
+                                        $("body").data("jsonresults", data);
+                                        var html = getHtmlTableFromJSON(data);
+                                        //console.log(html);
+                                        document.getElementById("results").innerHTML = html;
+
+                                        if (data.length > 0) {
+                                            //RouteIDs
+                                            var op = data.map(function (item) {
+                                                return item.RouteID;
+                                            });
+                                            var set = new Set(op);
+                                            $("#routeids").empty();
+                                            for (let item of set) {
+                                                $("#routeids").append($("<option>").attr('value', item));
+                                            }
+
+                                            //BusOperators
+                                            var op = data.map(function (item) {
+                                                return item.BusOperator;
+                                            });
+                                            var set = new Set(op);
+                                            $("#busops").empty();
+                                            for (let item of set) {
+                                                $("#busops").append($("<option>").attr('value', item));
+                                            }
+
+                                            //BusTypeNames
+                                            op = data.map(function (item) {
+                                                return item.BusTypeName;
+                                            });
+                                            set = new Set(op);
+                                            $("#bustypes").empty();
+                                            for (let item of set) {
+                                                $("#bustypes").append($("<option>").attr('value', item));
+                                            }
+
+                                            //ServiceProviders
+                                            op = data.map(function (item) {
+                                                return item.ServiceProvider;
+                                            });
+                                            set = new Set(op);
+                                            $("#svcprs").empty();
+                                            for (let item of set) {
+                                                $("#svcprs").append($("<option>").attr('value', item));
+                                            }
+
+                                            //ServiceProviderTypes
+                                            op = data.map(function (item) {
+                                                return item.ServiceProviderType;
+                                            });
+                                            set = new Set(op);
+                                            $("#svcprtypes").empty();
+                                            for (let item of set) {
+                                                $("#svcprtypes").append($("<option>").attr('value', item));
+                                            }
+
+                                            //Frees
+                                            op = data.map(function (item) {
+                                                return item.Free;
+                                            });
+                                            set = new Set(op);
+                                            $("#frees").empty();
+                                            for (let item of set) {
+                                                $("#frees").append($("<option>").attr('value', item));
+                                            }
+
+                                            //Loops
+                                            op = data.map(function (item) {
+                                                return item.Loop;
+                                            });
+                                            set = new Set(op);
+                                            $("#loops").empty();
+                                            for (let item of set) {
+                                                $("#loops").append($("<option>").attr('value', item));
+                                            }
+
+                                            //Stages
+                                            op = data.map(function (item) {
+                                                return item.Stage;
+                                            });
+                                            set = new Set(op);
+                                            $("#stages").empty();
+                                            for (let item of set) {
+                                                $("#stages").append($("<option>").attr('value', item));
+                                            }
+
+                                            //StartTimes
+                                            op = data.map(function (item) {
+                                                return item.StartTime;
+                                            });
+                                            set = new Set(op);
+                                            $("#stimes").empty();
+                                            for (let item of set) {
+                                                $("#stimes").append($("<option>").attr('value', item));
+                                            }
+
+                                            //Sources
+                                            op = data.map(function (item) {
+                                                return item.Source;
+                                            });
+                                            set = new Set(op);
+                                            $("#sources").empty();
+                                            for (let item of set) {
+                                                $("#sources").append($("<option>").attr('value', item));
+                                            }
+
+                                            //EndTimes
+                                            op = data.map(function (item) {
+                                                return item.EndTime;
+                                            });
+                                            set = new Set(op);
+                                            $("#etimes").empty();
+                                            for (let item of set) {
+                                                $("#etimes").append($("<option>").attr('value', item));
+                                            }
+
+                                            //Destinations
+                                            op = data.map(function (item) {
+                                                return item.Destination;
+                                            });
+                                            set = new Set(op);
+                                            $("#dests").empty();
+                                            for (let item of set) {
+                                                $("#dests").append($("<option>").attr('value', item));
+                                            }
+                                        }
+                                    }
+                                }
+                            )
+                    });
+                }
+                else {
+                    alert("You're session has expired. Please login again.");
+                    window.location.href = loginURL;
+                }
+            });
+        }
+        else {
+            alert("You're session has expired. Please login again.");
+            window.location.href = loginURL;
+        }
+
+        function go() {
+            var data = $("body").data("jsonresults");
+            var routeid = document.getElementById("routeid").value;
+            var busop = document.getElementById("busop").value;
+            var bustype = document.getElementById("bustype").value;
+            var svcpr = document.getElementById("svcpr").value;
+            var svcprtype = document.getElementById("svcprtype").value;
+            var free = document.getElementById("free").value;
+            var loop = document.getElementById("loop").value;
+            var stage = document.getElementById("stage").value;
+            var stime = document.getElementById("stime").value;
+            var source = document.getElementById("source").value;
+            var etime = document.getElementById("etime").value;
+            var dest = document.getElementById("dest").value;
+
+            // Perform filter
+            var filtered = data.filter(function (item) {
+                return ((item.RouteID == routeid) || (routeid == ""))
+                    && ((item.BusOperator == busop) || (busop == ""))
+                    && ((item.BusTypeName == bustype) || (bustype == ""))
+                    && ((item.ServiceProvider == svcpr) || (svcpr == ""))
+                    && ((item.ServiceProviderType == svcprtype) || (svcprtype == ""))
+                    && ((item.Free == free) || (free == ""))
+                    && ((item.Loop == loop) || (loop == ""))
+                    && ((item.Stage == stage) || (stage == ""))
+                    && ((item.StartTime == stime) || (stime == ""))
+                    && ((item.Source == source) || (source == ""))
+                    && ((item.EndTime == etime) || (etime == ""))
+                    && ((item.Destination == dest) || (dest == ""));
+            });
+            //console.log(filtered);
+            var html = getHtmlTableFromJSON(filtered);
+            //console.log(html);
+            document.getElementById("results").innerHTML = html;
+        }
+
+        function reset() {
+            var data = $("body").data("jsonresults");
+            makeEmpty(document.getElementById("routeid"));
+            makeEmpty(document.getElementById("busop"));
+            makeEmpty(document.getElementById("bustype"));
+            makeEmpty(document.getElementById("svcpr"));
+            makeEmpty(document.getElementById("svcprtype"));
+            makeEmpty(document.getElementById("free"));
+            makeEmpty(document.getElementById("loop"));
+            makeEmpty(document.getElementById("stage"));
+            makeEmpty(document.getElementById("stime"));
+            makeEmpty(document.getElementById("source"));
+            makeEmpty(document.getElementById("etime"));
+            makeEmpty(document.getElementById("dest"));
+            // 
+            var html = getHtmlTableFromJSON(data);
+            //console.log(html);
+            document.getElementById("results").innerHTML = html;
+        }
+
+        function makeEmpty(x) {
+            x.value = "";
+        }
+
+        function getHtmlTableFromJSON(data) {
+            var html = "";
+            if (data.length === 0)
+                html += "<h5>No matching routes found!<\/h3>";
+
+            else {
+                var keys = Object.keys(data[0]);
+                html += "<body><table border = '3' class='w3-table-all w3-hoverable w3-text-black w3-medium'>";
+
+                // header
+                html += "<thead><tr>";
+                for (var i = 0; i < keys.length; i++)
+                    html += "<th>" + keys[i] + "<\/th>";
+                html += "<\/tr><\/thead><tbody>";
+
+                //table
+                for (var i = 0; i < data.length; i++) {
+                    html += "<tr>";
+                    for (var j = 0; j < keys.length; j++) {
+                        var checkNull = !data[i][keys[j]];
+                        html += "<td>" + (checkNull ? '' : data[i][keys[j]]) + "<\/td>";
+                    }
+                    html += "<\/tr>";
+                }
+                html += "<\/tbody><\/table>";
+            }
+
+            //console.log(html);
+            return html;
+        }
+    </script>
+</body>
+
+</html>
