@@ -7,15 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>JIRA Shuttle Bus Management Application</title>
     <meta name="description" content="" />
-    <link
-        href="assets/css/w3.css"
-        rel="stylesheet">
-    <link
-        href="assets/css/styles.css"
-        rel="stylesheet">
-    <link
-        href="assets/css/gradients.css"
-        rel="stylesheet">
+    <link href="assets/css/w3.css" rel="stylesheet">
+    <link href="assets/css/styles.css" rel="stylesheet">
+    <link href="assets/css/gradients.css" rel="stylesheet">
 </head>
 
 <body class="w3-responsive">
@@ -43,12 +37,9 @@
         </div>
     </div>
 
-    <script
-        src="assets/js/set-background.js"></script>
-    <script
-        src="assets/js/amazon-cognito-auth.min.js"></script>
-    <script
-        src="assets/js/sbmp-config.js"></script>
+    <script src="assets/js/set-background.js"></script>
+    <script src="assets/js/amazon-cognito-auth.min.js"></script>
+    <script src="assets/js/sbmp-config.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
     <script type="text/javascript">
@@ -99,6 +90,8 @@
                     {
                         type: 'GET',
                         url: API_URL,
+                        crossDomain: true,
+                        dataType: 'jsonp',
                         headers: { 'Authorization': idToken },
                         success: function (data) {
                             if (data.length === 0) {
