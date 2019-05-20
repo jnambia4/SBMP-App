@@ -90,8 +90,6 @@
                     {
                         type: 'GET',
                         url: API_URL,
-                        crossDomain: true,
-                        dataType: 'jsonp',
                         headers: { 'Authorization': idToken },
                         success: function (data) {
                             if (data.length === 0) {
