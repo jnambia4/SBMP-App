@@ -78,7 +78,7 @@ Resources:
   RouteSearchUI:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: routesearch/index.get
+      Handler: routesearch.get
       Runtime: nodejs8.10
       Role:
         Fn::GetAtt:
@@ -93,7 +93,7 @@ Resources:
   UserProfileUI:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: profilemgmt/index.get
+      Handler: profilemgmt.get
       Runtime: nodejs8.10
       Role:
         Fn::GetAtt:
@@ -108,7 +108,7 @@ Resources:
   SPTaggingUI:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: sptagging/index.get
+      Handler: sptagging.get
       Runtime: nodejs8.10
       Role:
         Fn::GetAtt:
