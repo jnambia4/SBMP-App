@@ -9,8 +9,9 @@ var config =
 };
 
 var frontendURL = config.sbmpFrontendURL;
+var landingURL = frontendURL + '/landing';
 var backendURL = config.sbmpBackendURL;
 var urlfiller = '?response_type=token&client_id=' + config.cognitoClientId + '&';
-var loginURL = config.cognitoDomainURL + '/login' + urlfiller + 'redirect_uri=' + frontendURL;
+var loginURL = config.cognitoDomainURL + '/login' + urlfiller + 'redirect_uri=' + landingURL;
 var logoutURL = config.cognitoDomainURL + '/logout' + urlfiller + 'logout_uri=' + loginURL;
-var signupURL = config.cognitoDomainURL + '/signup' + urlfiller + 'redirect_uri=' + frontendURL;
+var signupURL = config.cognitoDomainURL + '/signup' + urlfiller + 'redirect_uri=' + landingURL;
