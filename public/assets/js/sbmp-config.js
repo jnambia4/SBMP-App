@@ -5,7 +5,7 @@ var config =
     "cognitoUserPoolId" : "ap-southeast-1_zDDt4ERsW",
     "cognitoTokenScopes" : ["phone", "email", "profile", "openid", "aws.cognito.signin.user.admin"],
     "sbmpFrontendURL" : "https://2qbdm0akjg.execute-api.ap-southeast-1.amazonaws.com/Prod",
-    "sbmpBackendURL" : "https://cmxnlf3nq1.execute-api.ap-southeast-1.amazonaws.com/Prod"
+    "sbmpBackendURL" : "https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod"
 };
 
 var frontendURL = config.sbmpFrontendURL;
