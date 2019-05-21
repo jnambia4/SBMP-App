@@ -71,17 +71,21 @@ The following back-end platform APIs are used to implement the front-end functio
 ### Landing page ###
 
 - Retrieve user profile (needs JWT token from login)
+  
   GET [/profilemgmt/json/{p02_UserId}](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt/json/{p02_UserId})
 
 - Retrieve list of user roles (first time login)
+  
   GET [/profilemgmt/userroles](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt/userroles)
 
 - Retrieve list of Service Providers types (first time login)
+  
   GET [/profilemgmt/svcprtypes](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt/svcprtypes)
 
 ### Home page ###
 
 - Create user profile (first time login, needs JWT token from login)
+  
   POST [/profilemgmt](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt)
 
   POST Request Body (JSON):
@@ -102,11 +106,13 @@ The following back-end platform APIs are used to implement the front-end functio
 ### View Profile page ###
 
 - Retrieve user profile (only if not found in Session Storage, needs JWT token from login)
+  
   GET [/profilemgmt/json/{p01_UserId}](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt/json/{p01_UserId})
 
 ### Search Routes page ###
 
 - Retrieve routes linked to profile
+  
   POST [/routesearch](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/routesearch)
 
   POST Request Body (JSON):
@@ -134,12 +140,15 @@ The following back-end platform APIs are used to implement the front-end functio
 ### Tag Service Providers page ###
 
 - Retrieve list of Service Providers
+  
   GET [/sptagging/svcproviders/json/-](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging/svcproviders/json/-)
 
 - Retrieve list of tagged Service Providers
+  
   GET [/sptagging/json/{p02_UserId}](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging/json/{p02_UserId})
 
 - Add Service Provider tagging (needs JWT token from login)
+  
   POST [/sptagging](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging)
 
   POST Request body (JSON):
@@ -152,6 +161,7 @@ The following back-end platform APIs are used to implement the front-end functio
   ```
 
 - Remove Service Provider tagging (needs JWT token from login)
+  
   DELETE [/sptagging](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging)
 
   DELETE Request body (JSON):
