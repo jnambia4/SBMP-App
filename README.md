@@ -76,7 +76,7 @@ The following back-end platform APIs are used to implement the front-end functio
 - Retrieve list of user roles (first time login)
   GET [/profilemgmt/userroles](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt/userroles)
 
-- Retrieve list of Service Providers (first time login)
+- Retrieve list of Service Providers types (first time login)
   GET [/profilemgmt/svcprtypes](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt/svcprtypes)
 
 ### Home page ###
@@ -134,7 +134,7 @@ The following back-end platform APIs are used to implement the front-end functio
 ### Tag Service Providers page ###
 
 - Retrieve list of Service Providers
-  GET [/svcproviders/json/-](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging/svcproviders/json/-)
+  GET [/sptagging/svcproviders/json/-](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging/svcproviders/json/-)
 
 - Retrieve list of tagged Service Providers
   GET [/sptagging/json/{p02_UserId}](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging/json/{p02_UserId})
