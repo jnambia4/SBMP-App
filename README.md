@@ -1,64 +1,74 @@
-Welcome to the AWS CodeStar sample web application
-==================================================
+Welcome to the JIRA Shuttle Bus Management Web Application
+==========================================================
 
-This sample code helps get you started with a simple Node.js web service deployed by AWS CloudFormation to AWS Lambda and Amazon API Gateway.
+This web application leverages the back-end JIRA Shuttle Bus Management platform APIs to provide customised UI-based services for the platform users.
 
-What's Here
+Web Application Structure
 -----------
 
-This sample includes:
+The application provides the following pages. All pages, except the Welcome page, are only accessible post user login.
 
-* README.md - this file
-* buildspec.yml - this file is used by AWS CodeBuild to package your
-  application for deployment to AWS Lambda
-* index.js - this file contains the sample Node.js code for the web service
-* template.yml - this file contains the AWS Serverless Application Model (AWS SAM) used
-  by AWS CloudFormation to deploy your application to AWS Lambda and Amazon API
-  Gateway.
-* tests/ - this directory contains unit tests for your application
-* template-configuration.json - this file contains the project ARN with placeholders used for tagging resources with the project ID
+* Welcome page - Links for SignUp and SignIn.
 
-What Do I Do Next?
+URL: https://2qbdm0akjg.execute-api.ap-southeast-1.amazonaws.com/Prod
+
+* SignUp page - Cognito User Pool built-in SignUp page
+
+Upon successful signup, user will receive a verification email at the email address provided. User need to click this link to verify their email address, before logging into the system.
+
+URL: https://jiracorp.auth.ap-southeast-1.amazoncognito.com/signup?response_type=token&client_id=u43f2tl674qh6guik00elvini&redirect_uri=https://2qbdm0akjg.execute-api.ap-southeast-1.amazonaws.com/Prod/landing
+
+* SignIn page - Cognito User Pool built-in SignIn page
+
+URL: https://jiracorp.auth.ap-southeast-1.amazoncognito.com/login?response_type=token&client_id=u43f2tl674qh6guik00elvini&redirect_uri=https://2qbdm0akjg.execute-api.ap-southeast-1.amazonaws.com/Prod/landing
+
+* Landing page - For first time user login, this page will provide the choice to user to select the user role in the system. For subsequent logins, this page is a simple redirect to the Home page.
+
+Roles available are:
+  - Bus Operator
+  - Service Provider
+  - Passenger
+
+For Service Provider role selection, the type of Service Provider needs to be selected as well. Choices are:
+  - Condo
+  - Organisation
+  - School
+  - Shopping Mall
+  - University
+
+URL: https://2qbdm0akjg.execute-api.ap-southeast-1.amazonaws.com/Prod/landing
+
+* Home page - This page provides links to all the various services available to the user, based on the user role.
+Common services for all users:
+  - View Profile
+  - Search Routes
+
+Bus Operator services:
+  - Manage Routes (currently a dummy link, as functionality is not added)
+
+Passenger services:
+  - Tag Service Providers
+
+URL: https://2qbdm0akjg.execute-api.ap-southeast-1.amazonaws.com/Prod/homepage
+
+* View Profile page - This page displays the profile details for the logged in user.
+
+URL: https://2qbdm0akjg.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt
+
+* Search Routes page - This page displays the list of routes linked with the user's profile. There are filters available narrowing the search criteria.
+
+URL: https://2qbdm0akjg.execute-api.ap-southeast-1.amazonaws.com/Prod/routesearch
+
+* Tag Service Providers page - This page is specific to a Passenger user.
+
+It has 3 sections:
+  - List of Service Providers already tagged to the Passenger profile
+  - Selection of Service Providers that can be tagged newly to the profile
+  - Selection of Service Providers that can be untagged from the profile
+
+URL: https://2qbdm0akjg.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging
+
+Implementation Details
 ------------------
 
-If you have checked out a local copy of your repository you can start making
-changes to the sample code.  We suggest making a small change to index.js first,
-so you can see how changes pushed to your project's repository are automatically
-picked up by your project pipeline and deployed to AWS Lambda and Amazon API Gateway.
-(You can watch the pipeline progress on your AWS CodeStar project dashboard.)
-Once you've seen how that works, start developing your own code, and have fun!
-
-To run your tests locally, go to the root directory of the
-sample code and run the `npm test` command, which
-AWS CodeBuild also runs through your `buildspec.yml` file.
-
-To test your new code during the release process, modify the existing tests or
-add tests to the tests directory. AWS CodeBuild will run the tests during the
-build stage of your project pipeline. You can find the test results
-in the AWS CodeBuild console.
-
-Learn more about AWS CodeBuild and how it builds and tests your application here:
-https://docs.aws.amazon.com/codebuild/latest/userguide/concepts.html
-
-Learn more about AWS Serverless Application Model (AWS SAM) and how it works here:
-https://github.com/awslabs/serverless-application-model/blob/master/HOWTO.md
-
-AWS Lambda Developer Guide:
-http://docs.aws.amazon.com/lambda/latest/dg/deploying-lambda-apps.html
-
-Learn more about AWS CodeStar by reading the user guide, and post questions and
-comments about AWS CodeStar on our forum.
-
-User Guide: http://docs.aws.amazon.com/codestar/latest/userguide/welcome.html
-
-Forum: https://forums.aws.amazon.com/forum.jspa?forumID=248
-
-What Should I Do Before Running My Project in Production?
-------------------
-
-AWS recommends you review the security best practices recommended by the framework
-author of your selected sample application before running it in production. You
-should also regularly review and apply any available patches or associated security
-advisories for dependencies used within your application.
-
-Best Practices: https://docs.aws.amazon.com/codestar/latest/userguide/best-practices.html?icmpid=docs_acs_rm_sec
+All the pages in the application are HTML/CSS/JS-based, accessible through individual serverless AWS Lambda functions, invoked through the AWS API Gateway. The application is hosted in the AWS Singapore region.
