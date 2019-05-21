@@ -73,6 +73,13 @@ The following back-end platform APIs are used to implement the front-end functio
 - Retrieve user profile (needs JWT token from login)
   
   GET [/profilemgmt/json/{p02_UserId}](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt/json/{p02_UserId})
+  
+  GET Request Header (JSON):
+  ```json
+  {
+      "Authorization": idToken  // JWT ID Token provided by Cognito User Pool upon login
+  }
+  ```
 
 - Retrieve list of user roles (first time login)
   
@@ -87,6 +94,13 @@ The following back-end platform APIs are used to implement the front-end functio
 - Create user profile (first time login, needs JWT token from login)
   
   POST [/profilemgmt](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt)
+
+  POST Request Header (JSON):
+  ```json
+  {
+      "Authorization": idToken  // JWT ID Token provided by Cognito User Pool upon login
+  }
+  ```
 
   POST Request Body (JSON):
   ```json
@@ -108,6 +122,13 @@ The following back-end platform APIs are used to implement the front-end functio
 - Retrieve user profile (only if not found in Session Storage, needs JWT token from login)
   
   GET [/profilemgmt/json/{p01_UserId}](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt/json/{p01_UserId})
+
+  GET Request Header (JSON):
+  ```json
+  {
+      "Authorization": idToken  // JWT ID Token provided by Cognito User Pool upon login
+  }
+  ```
 
 ### Search Routes page ###
 
@@ -151,6 +172,13 @@ The following back-end platform APIs are used to implement the front-end functio
   
   POST [/sptagging](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging)
 
+  POST Request Header (JSON):
+  ```json
+  {
+      "Authorization": idToken  // JWT ID Token provided by Cognito User Pool upon login
+  }
+  ```
+
   POST Request body (JSON):
   ```json
   {
@@ -163,6 +191,13 @@ The following back-end platform APIs are used to implement the front-end functio
 - Remove Service Provider tagging (needs JWT token from login)
   
   DELETE [/sptagging](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging)
+
+  DELETE Request Header (JSON):
+  ```json
+  {
+      "Authorization": idToken  // JWT ID Token provided by Cognito User Pool upon login
+  }
+  ```
 
   DELETE Request body (JSON):
   ```json
