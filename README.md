@@ -73,78 +73,91 @@ The following back-end platform APIs are used to implement the front-end functio
 - Retrieve user profile (needs JWT token from login)
   GET [/profilemgmt/json/{p02_UserId}](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt/json/{p02_UserId})
 
-- Retrieve list of user roles (first time login) - GET [/profilemgmt/userroles](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt/userroles)
+- Retrieve list of user roles (first time login)
+  GET [/profilemgmt/userroles](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt/userroles)
 
-- Retrieve list of Service Providers (first time login) - GET [/profilemgmt/svcprtypes](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt/svcprtypes)
+- Retrieve list of Service Providers (first time login)
+  GET [/profilemgmt/svcprtypes](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt/svcprtypes)
 
 ### Home page ###
 
-- Create user profile (first time login, needs JWT token from login) - POST [/profilemgmt](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt)
-POST Request Body (JSON):
-```json
-{
-    "p01_UserId": userid,
-    "p02_UserRole": userrole,
-    "p03_SvcPrType": svcprtype,
-    "p04_UserName": username,
-    "p05_UserDOB": userdob,
-    "p06_UserPhone": userphone,
-    "p07_UserEmail": useremail,
-    "p08_UserAddress": useraddress,
-    "p09_CreatedBy": "sbmpsignup"
-}
-```
+- Create user profile (first time login, needs JWT token from login)
+  POST [/profilemgmt](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt)
+
+  POST Request Body (JSON):
+  ```json
+  {
+      "p01_UserId": userid,
+      "p02_UserRole": userrole,
+      "p03_SvcPrType": svcprtype,
+      "p04_UserName": username,
+      "p05_UserDOB": userdob,
+      "p06_UserPhone": userphone,
+      "p07_UserEmail": useremail,
+      "p08_UserAddress": useraddress,
+      "p09_CreatedBy": "sbmpsignup"
+  }
+  ```
 
 ### View Profile page ###
 
-- Retrieve user profile (only if not found in Session Storage, needs JWT token from login) - GET [/profilemgmt/json/{p01_UserId}](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt/json/{p01_UserId})
+- Retrieve user profile (only if not found in Session Storage, needs JWT token from login)
+  GET [/profilemgmt/json/{p01_UserId}](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt/json/{p01_UserId})
 
 ### Search Routes page ###
 
-- Retrieve routes linked to profile - POST [/routesearch](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/routesearch)
-POST Request Body (JSON):
-```json
-{
-    "p01_Format": "json",
-    "p02_UserRole": userrole,
-    "p03_UserId": userid,
-    "p04_RouteId": "",
-    "p05_BusOpId": "",
-    "p06_SvcPrId": "",
-    "p07_BusType": "",
-    "p08_SvcPrType": "",
-    "p09_Free": "",
-    "p10_Loop": "",
-    "p11_SrcStop": "",
-    "p12_DestStop": "",
-    "p13_SrcTime": "",
-    "p14_SrcTimeOp": "",
-    "p15_DestTime": "",
-    "p16_DestTimeOp": ""
-}
-```
+- Retrieve routes linked to profile
+  POST [/routesearch](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/routesearch)
+
+  POST Request Body (JSON):
+  ```json
+  {
+      "p01_Format": "json",
+      "p02_UserRole": userrole,
+      "p03_UserId": userid,
+      "p04_RouteId": "",
+      "p05_BusOpId": "",
+      "p06_SvcPrId": "",
+      "p07_BusType": "",
+      "p08_SvcPrType": "",
+      "p09_Free": "",
+      "p10_Loop": "",
+      "p11_SrcStop": "",
+      "p12_DestStop": "",
+      "p13_SrcTime": "",
+      "p14_SrcTimeOp": "",
+      "p15_DestTime": "",
+      "p16_DestTimeOp": ""
+  }
+  ```
 
 ### Tag Service Providers page ###
 
-- Retrieve list of Service Providers - GET [/svcproviders/json/-](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging/svcproviders/json/-)
+- Retrieve list of Service Providers
+  GET [/svcproviders/json/-](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging/svcproviders/json/-)
 
-- Retrieve list of tagged Service Providers - GET [/sptagging/json/{p02_UserId}](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging/json/{p02_UserId})
+- Retrieve list of tagged Service Providers
+  GET [/sptagging/json/{p02_UserId}](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging/json/{p02_UserId})
 
-- Add Service Provider tagging (needs JWT token from login) - POST [/sptagging](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging)
-POST Request body (JSON):
-```json
-{
-    "p01_PassengerUserId": userid,
-    "p02_SvcPrId": svcprid,
-    "p03_CreatedBy": "sbmpsptagging"
-}
-```
+- Add Service Provider tagging (needs JWT token from login)
+  POST [/sptagging](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging)
 
-- Remove Service Provider tagging (needs JWT token from login) - DELETE [/sptagging](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging)
-DELETE Request body (JSON):
-```json
-{
-    "p01_PassengerUserId": userid,
-    "p02_SvcPrId": svcprid
-}
-```
+  POST Request body (JSON):
+  ```json
+  {
+      "p01_PassengerUserId": userid,
+      "p02_SvcPrId": svcprid,
+      "p03_CreatedBy": "sbmpsptagging"
+  }
+  ```
+
+- Remove Service Provider tagging (needs JWT token from login)
+  DELETE [/sptagging](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging)
+
+  DELETE Request body (JSON):
+  ```json
+  {
+      "p01_PassengerUserId": userid,
+      "p02_SvcPrId": svcprid
+  }
+  ```
