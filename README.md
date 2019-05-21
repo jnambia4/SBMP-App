@@ -79,7 +79,7 @@ The following back-end platform APIs are used to implement the front-end functio
 
 ### Home page ###
 
-Create user profile (first time login, needs JWT token from login) - POST [/profilemgmt](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt)
+- Create user profile (first time login, needs JWT token from login) - POST [/profilemgmt](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt)
 POST Request Body (JSON):
 ```json
 {
@@ -97,11 +97,11 @@ POST Request Body (JSON):
 
 ### View Profile page ###
 
-Retrieve user profile (only if not found in Session Storage, needs JWT token from login) - GET [/profilemgmt/json/{p01_UserId}](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt/json/{p01_UserId})
+- Retrieve user profile (only if not found in Session Storage, needs JWT token from login) - GET [/profilemgmt/json/{p01_UserId}](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt/json/{p01_UserId})
 
 ### Search Routes page ###
 
-Retrieve routes linked to profile - POST [/routesearch](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/routesearch)
+- Retrieve routes linked to profile - POST [/routesearch](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/routesearch)
 POST Request Body (JSON):
 ```json
 {
@@ -126,11 +126,11 @@ POST Request Body (JSON):
 
 ### Tag Service Providers page ###
 
-Retrieve list of Service Providers - GET [/svcproviders/json/-](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging/svcproviders/json/-)
+- Retrieve list of Service Providers - GET [/svcproviders/json/-](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging/svcproviders/json/-)
 
-Retrieve list of tagged Service Providers - GET [/sptagging/json/{p02_UserId}](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging/json/{p02_UserId})
+- Retrieve list of tagged Service Providers - GET [/sptagging/json/{p02_UserId}](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging/json/{p02_UserId})
 
-Add Service Provider tagging (needs JWT token from login) - POST [/sptagging](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging)
+- Add Service Provider tagging (needs JWT token from login) - POST [/sptagging](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging)
 POST Request body (JSON):
 ```json
 {
@@ -140,7 +140,7 @@ POST Request body (JSON):
 }
 ```
 
-Remove Service Provider tagging (needs JWT token from login) - DELETE [/sptagging](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging)
+- Remove Service Provider tagging (needs JWT token from login) - DELETE [/sptagging](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging)
 DELETE Request body (JSON):
 ```json
 {
