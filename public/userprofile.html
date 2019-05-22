@@ -55,7 +55,7 @@
         $('#sptagginglink').hide();
 
         $('#viewprofile').hide();
-        $('#signoutlink').prop("href", logoutURL);
+        //$('#signoutlink').prop("href", logoutURL);
 
         var userid = sessionStorage.getItem("userid");
         var userrole = sessionStorage.getItem("userrole");
@@ -86,9 +86,10 @@
 
                 if (session.isValid()) {
                     $('#signoutlink').click(function () {
-                        cognitoUser.signOut();
                         sessionStorage.clear();
-                        window.location.href = logoutURL;
+                        alert('check before exiting');
+                        cognitoUser.signOut();
+                        //window.location.href = logoutURL;
                     });
 
                     $('#viewprofile').text('Hi ' + userid + '!');
