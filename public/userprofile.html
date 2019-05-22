@@ -7,15 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>JIRA Shuttle Bus Management Application</title>
     <meta name="description" content="" />
-    <link
-        href="assets/css/w3.css"
-        rel="stylesheet">
-    <link
-        href="assets/css/styles.css"
-        rel="stylesheet">
-    <link
-        href="assets/css/gradients.css"
-        rel="stylesheet">
+    <link href="assets/css/w3.css" rel="stylesheet">
+    <link href="assets/css/styles.css" rel="stylesheet">
+    <link href="assets/css/gradients.css" rel="stylesheet">
 </head>
 
 <body class="w3-responsive">
@@ -30,7 +24,8 @@
                     <div class="w3-dropdown-content w3-bar-block w3-border">
                         <a href="/Prod/profilemgmt" class="w3-bar-item w3-button w3-medium">View Profile</a>
                         <a href="/Prod/routesearch" class="w3-bar-item w3-button w3-medium">Search Routes</a>
-                        <a id="routemgmtlink" href="#" class="w3-bar-item w3-button w3-medium">Manage Routes (Coming Soon...)</a>
+                        <a id="routemgmtlink" href="#" class="w3-bar-item w3-button w3-medium">Manage Routes (Coming
+                            Soon...)</a>
                         <a id="sptagginglink" href="/Prod/sptagging" class="w3-bar-item w3-button w3-medium">Tag Service
                             Providers</a>
                     </div>
@@ -50,12 +45,9 @@
         <div id="results" class="w3-responsive w3-padding"></div>
     </div>
 
-    <script
-        src="assets/js/set-background.js"></script>
-    <script
-        src="assets/js/amazon-cognito-identity.min.js"></script>
-    <script
-        src="assets/js/sbmp-config.js"></script>
+    <script src="assets/js/set-background.js"></script>
+    <script src="assets/js/amazon-cognito-identity.min.js"></script>
+    <script src="assets/js/sbmp-config.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script type="text/javascript">
         $('body').hide();
@@ -93,10 +85,21 @@
                 console.log('session validity: ' + session.isValid());
 
                 if (session.isValid()) {
+                    $('#signoutlink').click(function () {
+                        cognitoUser.signOut();
+                        sessionStorage.clear();
+                        window.location.href = logoutURL;
+                    });
+
+                    $('#viewprofile').text('Hi ' + userid + '!');
+                    $('#viewprofile').show();
+
+                    $("body").show();
+
                     var userprofile = JSON.parse(sessionStorage.getItem("userprofile"));
                     var idToken = localStorage.getItem("CognitoIdentityServiceProvider." + config.cognitoClientId + "." + userid + ".idToken");
 
-                    if (!userprofile) /*not required here as this page will never be accessible without homepage first*/ {
+                    if (!userprofile) {
                         var API_URL = backendURL + '/profilemgmt/json/' + userid;
                         $.ajax
                             (
@@ -132,16 +135,6 @@
         }
 
         function display(userprofile) {
-            $('#signoutlink').click(function () {
-                cognitoUser.signOut();
-                window.location.href = logoutURL;
-            });
-
-            $('#viewprofile').text('Hi ' + userid + '!');
-            $('#viewprofile').show();
-
-            $("body").show();
-
             var html = "<table border='3' class='w3-table-all w3-hoverable'><tbody class='w3-text-black w3-large'>";
             html += "<tr><th class='w3-quarter'>Name<\/th><td class='w3-threequarter'>" + (userprofile.UserName ? userprofile.UserName : "") + "<\/td><\/tr>";
             html += "<tr><th class='w3-quarter'>Role<\/th><td class='w3-threequarter'>" + (userprofile.RoleName ? userprofile.RoleName : "") + "<\/td><\/tr>";
