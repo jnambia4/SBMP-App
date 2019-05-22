@@ -95,9 +95,8 @@
 
                 if (session.isValid()) {
                     $('#signoutlink').click(function () {
-                        cognitoUser.signOut();
                         sessionStorage.clear();
-                        window.location.href = logoutURL;
+                        cognitoUser.signOut();
                     });
 
                     $('#viewprofile').text('Hi ' + userid + '!');
