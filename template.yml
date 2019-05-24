@@ -59,7 +59,6 @@ Resources:
           Properties:
             Path: /landing
             Method: get
-
   HomePageUI:
     Type: AWS::Serverless::Function
     Properties:
@@ -119,6 +118,21 @@ Resources:
           Type: Api
           Properties:
             Path: /sptagging
+            Method: get
+  DocUI:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/doc.get
+      Runtime: nodejs8.10
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+      Events:
+        GetEvent:
+          Type: Api
+          Properties:
+            Path: /apidoc
             Method: get
   LambdaExecutionRole:
     Description: Creating service role in IAM for AWS Lambda
