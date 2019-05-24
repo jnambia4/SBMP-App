@@ -62,11 +62,13 @@ It has 3 sections:
 Implementation Details
 ------------------
 
+Please refer to the [Platform API Documentation](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod) for complete reference of all platform APIs available.
+
 All the pages in the application are HTML/CSS/JS-based, accessible through individual serverless AWS Lambda functions, invoked through the AWS API Gateway. The application is hosted in the AWS Singapore region.
 
 Caching of data across pages is only done via the HTML Session Storage, and is available as long as the session is active.
 
-The following back-end platform APIs are used to implement the front-end functionality. Base URL for back-end platform is - https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod
+The following back-end platform APIs are used to implement the front-end functionality.
 
 ### Landing page ###
 
