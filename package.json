@@ -5,7 +5,7 @@
     "private": true,
     "devDependencies": {
         "mocha": "5.0.0",
-        "unit.js": "2.0.0"
+        "unit.js": "^2.1.0"
     },
     "scripts": {
         "test": "mocha --recursive --timeout 100000 --exit tests"
