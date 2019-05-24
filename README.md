@@ -74,7 +74,7 @@ The following back-end platform APIs are used to implement the front-end functio
 
 - Retrieve user profile (needs JWT token from login)
   
-  GET [/profilemgmt/json/{p02_UserId}](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt/json/{p02_UserId})
+  GET [/profilemgmt/json/{p02\_UserId}](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt/json/{p02_UserId})
   
   GET Request Header (JSON):
   ```json
@@ -123,7 +123,7 @@ The following back-end platform APIs are used to implement the front-end functio
 
 - Retrieve user profile (only if not found in Session Storage, needs JWT token from login)
   
-  GET [/profilemgmt/json/{p01_UserId}](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt/json/{p01_UserId})
+  GET [/profilemgmt/json/{p01\_UserId}](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt/json/{p01_UserId})
 
   GET Request Header (JSON):
   ```json
@@ -168,7 +168,7 @@ The following back-end platform APIs are used to implement the front-end functio
 
 - Retrieve list of tagged Service Providers
   
-  GET [/sptagging/json/{p02_UserId}](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging/json/{p02_UserId})
+  GET [/sptagging/json/{p02\_PassengerUserId}](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging/json/{p02_PassengerUserId})
 
 - Add Service Provider tagging (needs JWT token from login)
   
