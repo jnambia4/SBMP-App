@@ -4,7 +4,7 @@ var fs = require('fs');
 var path = require('path');
 
 exports.get = function(event, context, callback) {
-  var contents = fs.readFileSync(`public${path.sep}userprofile.html`);
+  var contents = fs.readFileSync(`src${path.sep}public${path.sep}sptagging.html`);
   var result = {
     statusCode: 200,
     body: contents.toString(),

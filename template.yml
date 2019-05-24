@@ -32,7 +32,7 @@ Resources:
   IndexUI:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: index.get
+      Handler: src/index.get
       Runtime: nodejs8.10
       Role:
         Fn::GetAtt:
@@ -47,7 +47,7 @@ Resources:
   LandingUI:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: landing.get
+      Handler: src/landing.get
       Runtime: nodejs8.10
       Role:
         Fn::GetAtt:
@@ -63,7 +63,7 @@ Resources:
   HomePageUI:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: homepage.get
+      Handler: src/homepage.get
       Runtime: nodejs8.10
       Role:
         Fn::GetAtt:
@@ -78,7 +78,7 @@ Resources:
   RouteSearchUI:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: routesearch.get
+      Handler: src/routesearch.get
       Runtime: nodejs8.10
       Role:
         Fn::GetAtt:
@@ -93,7 +93,7 @@ Resources:
   UserProfileUI:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: profilemgmt.get
+      Handler: src/profilemgmt.get
       Runtime: nodejs8.10
       Role:
         Fn::GetAtt:
@@ -108,7 +108,7 @@ Resources:
   SPTaggingUI:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: sptagging.get
+      Handler: src/sptagging.get
       Runtime: nodejs8.10
       Role:
         Fn::GetAtt:

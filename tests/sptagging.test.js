@@ -1,5 +1,5 @@
 var test = require('unit.js');
-var sptagging = require('../sptagging.js');
+var sptagging = require('../src/sptagging.js');
 
 describe('sptagging test', function() {
   it('verifies successful response of sptagging.get', function(done) {

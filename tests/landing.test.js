@@ -1,5 +1,5 @@
 var test = require('unit.js');
-var index = require('../landing.js');
+var index = require('../src/landing.js');
 
 describe('landing test', function() {
   it('verifies successful response of landing.get', function(done) {

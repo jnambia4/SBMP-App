@@ -1,5 +1,5 @@
 var test = require('unit.js');
-var index = require('../homepage.js');
+var index = require('../src/homepage.js');
 
 describe('homepage test', function() {
   it('verifies successful response of homepage.get', function(done) {

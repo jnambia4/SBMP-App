@@ -1,5 +1,5 @@
 var test = require('unit.js');
-var routesearch = require('../routesearch.js');
+var routesearch = require('../src/routesearch.js');
 
 describe('routesearch test', function() {
   it('verifies successful response of routesearch.get', function(done) {

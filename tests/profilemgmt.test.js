@@ -1,5 +1,5 @@
 var test = require('unit.js');
-var profilemgmt = require('../profilemgmt.js');
+var profilemgmt = require('../src/profilemgmt.js');
 
 describe('profilemgmt test', function() {
   it('verifies successful response of profilemgmt.get', function(done) {
