@@ -74,7 +74,7 @@ The following back-end platform APIs are used to implement the front-end functio
 
 - Retrieve user profile (needs JWT token from login)
   
-  GET [/profilemgmt/json/{p02\_UserId}](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt/json/{p02_UserId})
+  GET [/profilemgmt/-/{p02\_UserId}](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt/-/{p02_UserId})
   
   GET Request Header (JSON):
   ```json
@@ -123,7 +123,7 @@ The following back-end platform APIs are used to implement the front-end functio
 
 - Retrieve user profile (only if not found in Session Storage, needs JWT token from login)
   
-  GET [/profilemgmt/json/{p01\_UserId}](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt/json/{p01_UserId})
+  GET [/profilemgmt/-/{p01\_UserId}](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt/-/{p01_UserId})
 
   GET Request Header (JSON):
   ```json
@@ -141,7 +141,7 @@ The following back-end platform APIs are used to implement the front-end functio
   POST Request Body (JSON):
   ```json
   {
-      "p01_Format": "json",
+      "p01_Format": "-",
       "p02_UserRole": userrole,
       "p03_UserId": userid,
       "p04_RouteId": "",
@@ -164,11 +164,11 @@ The following back-end platform APIs are used to implement the front-end functio
 
 - Retrieve list of Service Providers
   
-  GET [/miscsvcs/svcproviders/json/-/-](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/miscsvcs/svcproviders/json/-/-)
+  GET [/miscsvcs/svcproviders/-/-/-](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/miscsvcs/svcproviders/-/-/-)
 
 - Retrieve list of tagged Service Providers
   
-  GET [/sptagging/json/{p02\_PassengerUserId}](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging/json/{p02_PassengerUserId})
+  GET [/sptagging/-/{p02\_PassengerUserId}](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging/-/{p02_PassengerUserId})
 
 - Add Service Provider tagging (needs JWT token from login)
   

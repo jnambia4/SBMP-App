@@ -99,7 +99,7 @@
                     var idToken = localStorage.getItem("CognitoIdentityServiceProvider." + config.cognitoClientId + "." + userid + ".idToken");
 
                     if (!userprofile) {
-                        var API_URL = backendURL + '/profilemgmt/json/' + userid;
+                        var API_URL = backendURL + '/profilemgmt/-/' + userid;
                         $.ajax
                             (
                                 {

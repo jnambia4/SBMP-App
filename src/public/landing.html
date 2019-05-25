@@ -84,7 +84,7 @@
         function decideNextStep(auth) {
             var userid = sessionStorage.getItem("userid");
             var idToken = localStorage.getItem("CognitoIdentityServiceProvider." + config.cognitoClientId + "." + userid + ".idToken");
-            var API_URL = backendURL + '/profilemgmt/json/' + userid;
+            var API_URL = backendURL + '/profilemgmt/-/' + userid;
             $.ajax
                 (
                     {

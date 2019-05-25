@@ -129,7 +129,7 @@
 
                     $(document).ready(function () {
                         //Get the list of all Service Providers in the system
-                        var API_URL = backendURL + '/miscsvcs/svcproviders/json/-/-';
+                        var API_URL = backendURL + '/miscsvcs/svcproviders/-/-/-';
                         $.ajax
                             (
                                 {
@@ -163,7 +163,7 @@
             resetAdd()
             document.getElementById("results").innerHTML = "";
 
-            var API_URL = backendURL + '/sptagging/json/' + userid;
+            var API_URL = backendURL + '/sptagging/-/' + userid;
             $.ajax
                 (
                     {
