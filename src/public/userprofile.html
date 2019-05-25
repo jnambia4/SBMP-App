@@ -137,6 +137,9 @@
             var html = "<table border='3' class='w3-table-all w3-hoverable'><tbody class='w3-text-black w3-large'>";
             html += "<tr><th class='w3-quarter'>Name<\/th><td class='w3-threequarter'>" + (userprofile.UserName ? userprofile.UserName : "") + "<\/td><\/tr>";
             html += "<tr><th class='w3-quarter'>Role<\/th><td class='w3-threequarter'>" + (userprofile.RoleName ? userprofile.RoleName : "") + "<\/td><\/tr>";
+            if (userProfile.UserRole && userProfile.UserRole == "S") {
+                html += "<tr><th class='w3-quarter'>Role<\/th><td class='w3-threequarter'>" + (userprofile.ServiceProviderType ? userprofile.ServiceProviderType : "") + "<\/td><\/tr>";
+            }
             html += "<tr><th class='w3-quarter'>Email<\/th><td class='w3-threequarter'>" + (userprofile.UserEmail ? userprofile.UserEmail : "") + "<\/td><\/tr>";
             html += "<tr><th class='w3-quarter'>Phone<\/th><td class='w3-threequarter'>" + (userprofile.UserPhone ? userprofile.UserPhone : "") + "<\/td><\/tr>";
             html += "<tr><th class='w3-quarter'>Address<\/th><td class='w3-threequarter'>" + (userprofile.UserAddress ? userprofile.UserAddress : "") + "<\/td><\/tr>";
