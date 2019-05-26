@@ -235,9 +235,9 @@
 
         function add() {
             var requestArray = {
-                "p01_PassengerUserId": userid,
-                "p02_SvcPrId": document.getElementById("svcpradd").value,
-                "p03_CreatedBy": "sbmpsptagging"
+                "PassengerUserId": userid,
+                "SvcPrId": document.getElementById("svcpradd").value,
+                "CreatedBy": "sbmpsptagging"
             };
             var requestJson = JSON.stringify(requestArray);
 
@@ -260,8 +260,8 @@
 
         function remove() {
             var requestArray = {
-                "p01_PassengerUserId": userid,
-                "p02_SvcPrId": document.getElementById("svcprdel").value
+                "PassengerUserId": userid,
+                "SvcPrId": document.getElementById("svcprdel").value
             };
             var requestJson = JSON.stringify(requestArray);
 

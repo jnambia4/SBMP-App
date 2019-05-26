@@ -74,7 +74,7 @@ The following back-end platform APIs are used to implement the front-end functio
 
 - Retrieve user profile (needs JWT token from login)
   
-  GET [/profilemgmt/-/{p02\_UserId}](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt/-/{p02_UserId})
+  GET [/profilemgmt/-/{UserId}](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt/-/{UserId})
   
   GET Request Header (JSON):
   ```json
@@ -107,15 +107,15 @@ The following back-end platform APIs are used to implement the front-end functio
   POST Request Body (JSON):
   ```json
   {
-      "p01_UserId": userid,
-      "p02_UserRole": userrole,
-      "p03_SvcPrType": svcprtype,
-      "p04_UserName": username,
-      "p05_UserDOB": userdob,
-      "p06_UserPhone": userphone,
-      "p07_UserEmail": useremail,
-      "p08_UserAddress": useraddress,
-      "p09_CreatedBy": "sbmpsignup"
+      "UserId": userid,
+      "UserRole": userrole,
+      "SvcPrType": svcprtype,
+      "UserName": username,
+      "UserDOB": userdob,
+      "UserPhone": userphone,
+      "UserEmail": useremail,
+      "UserAddress": useraddress,
+      "CreatedBy": "sbmpsignup"
   }
   ```
 
@@ -123,7 +123,7 @@ The following back-end platform APIs are used to implement the front-end functio
 
 - Retrieve user profile (only if not found in Session Storage, needs JWT token from login)
   
-  GET [/profilemgmt/-/{p01\_UserId}](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt/-/{p01_UserId})
+  GET [/profilemgmt/-/{UserId}](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt/-/{UserId})
 
   GET Request Header (JSON):
   ```json
@@ -141,22 +141,22 @@ The following back-end platform APIs are used to implement the front-end functio
   POST Request Body (JSON):
   ```json
   {
-      "p01_Format": "-",
-      "p02_UserRole": userrole,
-      "p03_UserId": userid,
-      "p04_RouteId": "",
-      "p05_BusOpId": "",
-      "p06_SvcPrId": "",
-      "p07_BusType": "",
-      "p08_SvcPrType": "",
-      "p09_Free": "",
-      "p10_Loop": "",
-      "p11_SrcStop": "",
-      "p12_DestStop": "",
-      "p13_SrcTime": "",
-      "p14_SrcTimeOp": "",
-      "p15_DestTime": "",
-      "p16_DestTimeOp": ""
+      "Format": "-",
+      "UserRole": userrole,
+      "UserId": userid,
+      "RouteId": "",
+      "BusOpId": "",
+      "SvcPrId": "",
+      "BusType": "",
+      "SvcPrType": "",
+      "Free": "",
+      "Loop": "",
+      "SrcStop": "",
+      "DestStop": "",
+      "SrcTime": "",
+      "SrcTimeOp": "",
+      "DestTime": "",
+      "DestTimeOp": ""
   }
   ```
 
@@ -168,7 +168,7 @@ The following back-end platform APIs are used to implement the front-end functio
 
 - Retrieve list of tagged Service Providers
   
-  GET [/sptagging/-/{p02\_PassengerUserId}](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging/-/{p02_PassengerUserId})
+  GET [/sptagging/-/{PassengerUserId}](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging/-/{PassengerUserId})
 
 - Add Service Provider tagging (needs JWT token from login)
   
@@ -184,9 +184,9 @@ The following back-end platform APIs are used to implement the front-end functio
   POST Request body (JSON):
   ```json
   {
-      "p01_PassengerUserId": userid,
-      "p02_SvcPrId": svcprid,
-      "p03_CreatedBy": "sbmpsptagging"
+      "PassengerUserId": userid,
+      "SvcPrId": svcprid,
+      "CreatedBy": "sbmpsptagging"
   }
   ```
 
@@ -204,7 +204,7 @@ The following back-end platform APIs are used to implement the front-end functio
   DELETE Request body (JSON):
   ```json
   {
-      "p01_PassengerUserId": userid,
-      "p02_SvcPrId": svcprid
+      "PassengerUserId": userid,
+      "SvcPrId": svcprid
   }
   ```

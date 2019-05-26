@@ -122,15 +122,15 @@
                         var roleAttribute = 'custom:userrole';
                         var svcprAttribute = 'custom:svcprtype';
                         var attributeArray = {
-                            "p01_UserId": userid,
-                            "p02_UserRole": "",
-                            "p03_SvcPrType": "",
-                            "p04_UserName": "",
-                            "p05_UserDOB": "",
-                            "p06_UserPhone": "",
-                            "p07_UserEmail": "",
-                            "p08_UserAddress": "",
-                            "p09_CreatedBy": "sbmpsignup"
+                            "UserId": userid,
+                            "UserRole": "",
+                            "SvcPrType": "",
+                            "UserName": "",
+                            "UserDOB": "",
+                            "UserPhone": "",
+                            "UserEmail": "",
+                            "UserAddress": "",
+                            "CreatedBy": "sbmpsignup"
                         };
                         console.log(result);
 
@@ -142,24 +142,24 @@
                             console.log('attribute ' + attributeName + ' has value ' + attributeValue);
                             switch (attributeName) {
                                 case roleAttribute:
-                                    spColName = "p02_UserRole";
+                                    spColName = "UserRole";
                                     checkRole = true;
                                     break;
                                 case svcprAttribute:
-                                    spColName = "p03_SvcPrType";
+                                    spColName = "SvcPrType";
                                     checkRole = true;
                                     break;
                                 case "name":
-                                    spColName = "p04_UserName";
+                                    spColName = "UserName";
                                     break;
                                 case "phone_number":
-                                    spColName = "p06_UserPhone";
+                                    spColName = "UserPhone";
                                     break;
                                 case "email":
-                                    spColName = "p07_UserEmail";
+                                    spColName = "UserEmail";
                                     break;
                                 case "address":
-                                    spColName = "p08_UserAddress"
+                                    spColName = "UserAddress"
                                     break;
                                 default:
                                     spColName = "";
@@ -195,9 +195,9 @@
                                 }
                                 console.log('call result: ' + result);
                                 console.log('attribute ' + roleAttribute + ' has value ' + userrole);
-                                attributeArray["p02_UserRole"] = userrole;
+                                attributeArray["UserRole"] = userrole;
                                 console.log('attribute ' + svcprAttribute + ' has value ' + svcprtype);
-                                attributeArray["p03_SvcPrType"] = svcprtype;
+                                attributeArray["SvcPrType"] = svcprtype;
 
                                 // if the user is also not found in backend database then create it
                                 if (sessionStorage.getItem("userFound") != "true") {
