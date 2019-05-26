@@ -143,7 +143,9 @@
             html += "<tr><th class='w3-quarter'>Email<\/th><td class='w3-threequarter'>" + (userprofile.UserEmail ? userprofile.UserEmail : "") + "<\/td><\/tr>";
             html += "<tr><th class='w3-quarter'>Phone<\/th><td class='w3-threequarter'>" + (userprofile.UserPhone ? userprofile.UserPhone : "") + "<\/td><\/tr>";
             html += "<tr><th class='w3-quarter'>Address<\/th><td class='w3-threequarter'>" + (userprofile.UserAddress ? userprofile.UserAddress : "") + "<\/td><\/tr>";
-            html += "<tr><th class='w3-quarter'>Date of Birth<\/th><td class='w3-threequarter'>" + (userprofile.UserDob ? userprofile.UserDob : "") + "<\/td><\/tr>";
+            if (userprofile.UserRole && userprofile.UserRole == "P") {
+                html += "<tr><th class='w3-quarter'>Date of Birth<\/th><td class='w3-threequarter'>" + (userprofile.UserDob ? userprofile.UserDob : "") + "<\/td><\/tr>";
+            }
             html += "<tr><th class='w3-quarter'>SBMP User ID<\/th><td class='w3-threequarter'>" + (userprofile.UserId ? userprofile.UserId : "") + "<\/td><\/tr>";
             html += "<tr><th class='w3-quarter'>Joined on<\/th><td class='w3-threequarter'>" + (userprofile.JoinDate ? userprofile.JoinDate : "") + "<\/td><\/tr>";
             html += "<\/tbody><\/table>";
