@@ -143,20 +143,7 @@ The following back-end platform APIs are used to implement the front-end functio
   {
       "Format": "-",
       "UserRole": userrole,
-      "UserId": userid,
-      "RouteId": "",
-      "BusOpId": "",
-      "SvcPrId": "",
-      "BusType": "",
-      "SvcPrType": "",
-      "Free": "",
-      "Loop": "",
-      "SrcStop": "",
-      "DestStop": "",
-      "SrcTime": "",
-      "SrcTimeOp": "",
-      "DestTime": "",
-      "DestTimeOp": ""
+      "UserId": userid
   }
   ```
 
