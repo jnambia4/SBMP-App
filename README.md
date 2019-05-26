@@ -35,15 +35,15 @@ Roles available are:
 ### [Home page](https://2qbdm0akjg.execute-api.ap-southeast-1.amazonaws.com/Prod/homepage) ###
 This page provides links to all the various services available to the user, based on the user role. For first time user login, this page also adds the user profile in the back-end database, based on details returned by Cognito.
 
-- Common services for all users:
-  - View Profile
-  - Search Routes
+  - Common services for all users:
+    - View Profile
+    - Search Routes
 
-- Bus Operator services:
-  - Manage Routes (currently a dummy link, as functionality is not added)
+  - Bus Operator services:
+    - Manage Routes (currently a dummy link, as functionality is not added)
 
-- Passenger services:
-  - Tag Service Providers
+  - Passenger services:
+    - Tag Service Providers
 
 ### [View Profile page](https://2qbdm0akjg.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt) ###
 This page displays the profile details for the logged in user.
@@ -72,126 +72,126 @@ The following back-end platform APIs are used to implement the front-end functio
 
 ### Landing page ###
 
-- Retrieve user profile (needs JWT token from login)
-  
-  GET [/profilemgmt/-/{UserId}](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt/-/{UserId})
-  
-  GET Request Header (JSON):
-  ```json
-  {
-      "Authorization": idToken  // JWT ID Token provided by Cognito User Pool upon login
-  }
-  ```
+  - Retrieve user profile (needs JWT token from login)
 
-- Retrieve list of user roles (first time login)
-  
-  GET [/miscsvcs/userroles](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/miscsvcs/userroles)
+    GET [/profilemgmt/-/{UserId}](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt/-/{UserId})
 
-- Retrieve list of Service Providers types (first time login)
-  
-  GET [/miscsvcs/svcprtypes](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/miscsvcs/svcprtypes)
+    GET Request Header (JSON):
+      ```json
+      {
+          "Authorization": idToken  // JWT ID Token provided by Cognito User Pool upon login
+      }
+      ```
+
+  - Retrieve list of user roles (first time login)
+    
+    GET [/miscsvcs/userroles](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/miscsvcs/userroles)
+
+  - Retrieve list of Service Providers types (first time login)
+    
+    GET [/miscsvcs/svcprtypes](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/miscsvcs/svcprtypes)
 
 ### Home page ###
 
-- Create user profile (first time login, needs JWT token from login)
-  
-  POST [/profilemgmt](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt)
+  - Create user profile (first time login, needs JWT token from login)
+    
+    POST [/profilemgmt](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt)
 
-  POST Request Header (JSON):
-  ```json
-  {
-      "Authorization": idToken  // JWT ID Token provided by Cognito User Pool upon login
-  }
-  ```
+    POST Request Header (JSON):
+      ```json
+      {
+          "Authorization": idToken  // JWT ID Token provided by Cognito User Pool upon login
+      }
+      ```
 
-  POST Request Body (JSON):
-  ```json
-  {
-      "UserId": userid,
-      "UserRole": userrole,
-      "SvcPrType": svcprtype,
-      "UserName": username,
-      "UserDOB": userdob,
-      "UserPhone": userphone,
-      "UserEmail": useremail,
-      "UserAddress": useraddress,
-      "CreatedBy": "sbmpsignup"
-  }
-  ```
+    POST Request Body (JSON):
+      ```json
+      {
+          "UserId": userid,
+          "UserRole": userrole,
+          "SvcPrType": svcprtype,
+          "UserName": username,
+          "UserDOB": userdob,
+          "UserPhone": userphone,
+          "UserEmail": useremail,
+          "UserAddress": useraddress,
+          "CreatedBy": "sbmpsignup"
+      }
+      ```
 
 ### View Profile page ###
 
-- Retrieve user profile (only if not found in Session Storage, needs JWT token from login)
-  
-  GET [/profilemgmt/-/{UserId}](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt/-/{UserId})
+  - Retrieve user profile (only if not found in Session Storage, needs JWT token from login)
+    
+    GET [/profilemgmt/-/{UserId}](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt/-/{UserId})
 
-  GET Request Header (JSON):
-  ```json
-  {
-      "Authorization": idToken  // JWT ID Token provided by Cognito User Pool upon login
-  }
-  ```
+    GET Request Header (JSON):
+      ```json
+      {
+          "Authorization": idToken  // JWT ID Token provided by Cognito User Pool upon login
+      }
+      ```
 
 ### Search Routes page ###
 
-- Retrieve routes linked to profile
-  
-  POST [/routesearch](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/routesearch)
+  - Retrieve routes linked to profile
+    
+    POST [/routesearch](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/routesearch)
 
-  POST Request Body (JSON):
-  ```json
-  {
-      "Format": "-",
-      "UserRole": userrole,
-      "UserId": userid
-  }
-  ```
+    POST Request Body (JSON):
+      ```json
+      {
+          "Format": "-",
+          "UserRole": userrole,
+          "UserId": userid
+      }
+      ```
 
 ### Tag Service Providers page ###
 
-- Retrieve list of Service Providers
-  
-  GET [/miscsvcs/svcproviders/-/-/-](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/miscsvcs/svcproviders/-/-/-)
+  - Retrieve list of Service Providers
+    
+    GET [/miscsvcs/svcproviders/-/-/-](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/miscsvcs/svcproviders/-/-/-)
 
-- Retrieve list of tagged Service Providers
-  
-  GET [/sptagging/-/{PassengerUserId}](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging/-/{PassengerUserId})
+  - Retrieve list of tagged Service Providers
+    
+    GET [/sptagging/-/{PassengerUserId}](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging/-/{PassengerUserId})
 
-- Add Service Provider tagging (needs JWT token from login)
-  
-  POST [/sptagging](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging)
+  - Add Service Provider tagging (needs JWT token from login)
+    
+    POST [/sptagging](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging)
 
-  POST Request Header (JSON):
-  ```json
-  {
-      "Authorization": idToken  // JWT ID Token provided by Cognito User Pool upon login
-  }
-  ```
+    POST Request Header (JSON):
+      ```json
+      {
+          "Authorization": idToken  // JWT ID Token provided by Cognito User Pool upon login
+      }
+      ```
 
-  POST Request body (JSON):
-  ```json
-  {
-      "PassengerUserId": userid,
-      "SvcPrId": svcprid,
-      "CreatedBy": "sbmpsptagging"
-  }
-  ```
+    POST Request body (JSON):
+      ```json
+      {
+          "PassengerUserId": userid,
+          "SvcPrId": svcprid,
+          "CreatedBy": "sbmpsptagging"
+      }
+      ```
 
-- Remove Service Provider tagging (needs JWT token from login)
-  
-  DELETE [/sptagging](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging)
+  - Remove Service Provider tagging (needs JWT token from login)
+    
+    DELETE [/sptagging](https://8m1adn9t35.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging)
 
-  DELETE Request Header (JSON):
-  ```json
-  {
-      "Authorization": idToken  // JWT ID Token provided by Cognito User Pool upon login
-  }
-  ```
+    DELETE Request Header (JSON):
+      ```json
+      {
+          "Authorization": idToken  // JWT ID Token provided by Cognito User Pool upon login
+      }
+      ```
 
-  DELETE Request body (JSON):
-  ```json
-  {
-      "PassengerUserId": userid,
-      "SvcPrId": svcprid
-  }
-  ```
+    DELETE Request body (JSON):
+      ```json
+      {
+          "PassengerUserId": userid,
+          "SvcPrId": svcprid
+      }
+      ```
