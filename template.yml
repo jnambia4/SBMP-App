@@ -26,10 +26,6 @@ Globals:
     Environment:
       Variables:
         NODE_ENV: production
-    Role:
-      Fn::GetAtt:
-      - LambdaExecutionRole
-      - Arn
   Api:
     EndpointConfiguration: REGIONAL
     Cors:
@@ -41,6 +37,10 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: src/index.get
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
       Events:
         GetEvent:
           Type: Api
@@ -51,6 +51,10 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: src/landing.get
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
       Events:
         GetEvent:
           Type: Api
@@ -61,6 +65,10 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: src/homepage.get
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
       Events:
         GetEvent:
           Type: Api
@@ -71,6 +79,10 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: src/routesearch.get
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
       Events:
         GetEvent:
           Type: Api
@@ -81,6 +93,10 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: src/profilemgmt.get
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
       Events:
         GetEvent:
           Type: Api
@@ -91,6 +107,10 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: src/sptagging.get
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
       Events:
         GetEvent:
           Type: Api
@@ -101,6 +121,10 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: src/doc.get
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
       Events:
         GetEvent:
           Type: Api
