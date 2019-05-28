@@ -46,13 +46,14 @@ label {
   position: relative;
 }
 
-footer, .push {
-  /* height: 7rem; */
+footer {
+  /*  */
 }
 
 footer .footer-contents {
-  padding: 0 5rem;
+  padding: 0 15rem;
   position: relative;
+  font-size: 150%;
 }
 
 .website-nav {
