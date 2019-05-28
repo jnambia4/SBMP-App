@@ -22,6 +22,14 @@ Globals:
       Enabled: true
       Type: AllAtOnce
       Role: !Ref CodeDeployRole
+    Runtime: nodejs10.x
+    Environment:
+      Variables:
+        NODE_ENV: production
+    Role:
+      Fn::GetAtt:
+      - LambdaExecutionRole
+      - Arn
   Api:
     EndpointConfiguration: REGIONAL
     Cors:
@@ -33,11 +41,6 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: src/index.get
-      Runtime: nodejs8.10
-      Role:
-        Fn::GetAtt:
-        - LambdaExecutionRole
-        - Arn
       Events:
         GetEvent:
           Type: Api
@@ -48,11 +51,6 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: src/landing.get
-      Runtime: nodejs8.10
-      Role:
-        Fn::GetAtt:
-        - LambdaExecutionRole
-        - Arn
       Events:
         GetEvent:
           Type: Api
@@ -63,11 +61,6 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: src/homepage.get
-      Runtime: nodejs8.10
-      Role:
-        Fn::GetAtt:
-        - LambdaExecutionRole
-        - Arn
       Events:
         GetEvent:
           Type: Api
@@ -78,11 +71,6 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: src/routesearch.get
-      Runtime: nodejs8.10
-      Role:
-        Fn::GetAtt:
-        - LambdaExecutionRole
-        - Arn
       Events:
         GetEvent:
           Type: Api
@@ -93,11 +81,6 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: src/profilemgmt.get
-      Runtime: nodejs8.10
-      Role:
-        Fn::GetAtt:
-        - LambdaExecutionRole
-        - Arn
       Events:
         GetEvent:
           Type: Api
@@ -108,11 +91,6 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: src/sptagging.get
-      Runtime: nodejs8.10
-      Role:
-        Fn::GetAtt:
-        - LambdaExecutionRole
-        - Arn
       Events:
         GetEvent:
           Type: Api
@@ -123,11 +101,6 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: src/doc.get
-      Runtime: nodejs8.10
-      Role:
-        Fn::GetAtt:
-        - LambdaExecutionRole
-        - Arn
       Events:
         GetEvent:
           Type: Api
