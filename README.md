@@ -1,7 +1,7 @@
-Welcome to the JIRA Shuttle Bus Management Web Application
+Welcome to the JiRa Shuttle Bus Management Web Application
 ==========================================================
 
-This web application leverages the back-end JIRA Shuttle Bus Management platform APIs to provide customised UI-based services for the platform users.
+This web application leverages the back-end JiRa Shuttle Bus Management platform APIs to provide customised UI-based services for the platform users.
 
 Web Application Structure
 -----------
