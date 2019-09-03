@@ -38,7 +38,7 @@
     </div>
 
     <script src="assets/js/set-background.js"></script>
-    <script src="assets/js/amazon-cognito-auth.min.js"></script>
+    <script src="assets/js/amazon-cognito-auth.js"></script>
     <script src="assets/js/sbmp-config.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
@@ -66,12 +66,14 @@
         };
         auth.useCodeGrantFlow();
 
+        console.log(auth);
+
         var curUrl = window.location.href;
         auth.parseCognitoWebResponse(curUrl);
 
         if (!auth || !(auth.getSignInUserSession().isValid())) {
             alert("You're session has expired. Please login again.");
-            window.location.href = loginURL;
+            // window.location.href = loginURL;
         }
 
         function storeAuthDetails() {
