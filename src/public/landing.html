@@ -64,6 +64,7 @@
                 alert("Error!");
             }
         };
+        auth.useCodeGrantFlow();
 
         var curUrl = window.location.href;
         auth.parseCognitoWebResponse(curUrl);
