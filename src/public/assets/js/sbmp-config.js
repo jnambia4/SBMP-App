@@ -1,6 +1,6 @@
 var config =
 {
-    "cognitoDomainURL" : "https://jiracorp.auth.ap-southeast-1.amazoncognito.com",
+    "cognitoDomainURL" : "jiracorp.auth.ap-southeast-1.amazoncognito.com",
     "cognitoClientId" : "u43f2tl674qh6guik00elvini",
     "cognitoUserPoolId" : "ap-southeast-1_zDDt4ERsW",
     "cognitoTokenScopes" : ["phone", "email", "profile", "openid", "aws.cognito.signin.user.admin"],
@@ -12,6 +12,6 @@ var frontendURL = config.sbmpFrontendURL;
 var landingURL = frontendURL + '/landing';
 var backendURL = config.sbmpBackendURL;
 var urlfiller = '?response_type=token&client_id=' + config.cognitoClientId + '&';
-var loginURL = config.cognitoDomainURL + '/login' + urlfiller + 'redirect_uri=' + landingURL;
-var logoutURL = config.cognitoDomainURL + '/logout' + urlfiller + 'logout_uri=' + frontendURL;
-var signupURL = config.cognitoDomainURL + '/signup' + urlfiller + 'redirect_uri=' + landingURL;
+var loginURL = 'https://' + config.cognitoDomainURL + '/login' + urlfiller + 'redirect_uri=' + landingURL;
+var logoutURL = 'https://' + config.cognitoDomainURL + '/logout' + urlfiller + 'logout_uri=' + frontendURL;
+var signupURL = 'https://' + config.cognitoDomainURL + '/signup' + urlfiller + 'redirect_uri=' + landingURL;
