@@ -71,10 +71,10 @@
         var curUrl = window.location.href;
         auth.parseCognitoWebResponse(curUrl);
 
-        if (!auth || !(auth.getSignInUserSession().isValid())) {
+        setTimeout(function(){if (!auth || !(auth.getSignInUserSession().isValid())) {
             alert("You're session has expired. Please login again.");
             // window.location.href = loginURL;
-        }
+        }}, 3000);
 
         function storeAuthDetails() {
             sessionStorage.clear();
