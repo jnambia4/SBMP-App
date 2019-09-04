@@ -44,7 +44,9 @@
 
     <script type="text/javascript">
         $('body').hide();
+        
         var cookieData = { domain: window.location.hostname };
+        var cookieStorage = new AmazonCognitoIdentity.CookieStorage(cookieData);
         var authData = {
             ClientId: config.cognitoClientId, // Your client id here
             AppWebDomain: config.cognitoDomainURL,
@@ -52,7 +54,7 @@
             RedirectUriSignIn: landingURL,
             RedirectUriSignOut: frontendURL,
             UserPoolId: config.cognitoUserPoolId, // Your user pool id here
-            Storage: new AmazonCognitoIdentity.CookieStorage(cookieData)
+            Storage: cookieStorage
         };
 
         var auth = new AmazonCognitoIdentity.CognitoAuth(authData);
@@ -88,7 +90,7 @@
 
         function decideNextStep(auth) {
             var userid = sessionStorage.getItem("userid");
-            var idToken = localStorage.getItem("CognitoIdentityServiceProvider." + config.cognitoClientId + "." + userid + ".idToken");
+            var idToken = cookieStorage.getItem("CognitoIdentityServiceProvider." + config.cognitoClientId + "." + userid + ".idToken");
             var API_URL = backendURL + '/profilemgmt/-/' + userid;
             $.ajax
                 (
