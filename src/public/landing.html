@@ -14,7 +14,7 @@
 
 <body class="w3-responsive">
     <div class="wrapper">
-        <header class="w3-container">
+        <header class="w3-container" id="hdr">
             <nav class="website-nav">
                 <ul>
                     <li><a class="home-link w3-btn w3-card" href="#">Home</a></li>
@@ -28,6 +28,9 @@
         </header>
 
         <div class="w3-container page-content">
+            <p class="w3-padding" style="font-size:x-large" id="waitmsg">
+                Authenticating. Please wait ...
+            </p>
             <p class="w3-padding" id="userroles">
             </p>
             <p class="w3-padding" id="svcprtypes">
@@ -43,18 +46,17 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
     <script type="text/javascript">
-        $('body').hide();
-        
-        var cookieData = { domain: window.location.hostname };
-        var cookieStorage = new AmazonCognitoIdentity.CookieStorage(cookieData);
+        $('#hdr').hide();
+        // var cookieData = { domain: window.location.hostname };
+        // var cookieStorage = new AmazonCognitoIdentity.CookieStorage(cookieData);
         var authData = {
             ClientId: config.cognitoClientId, // Your client id here
             AppWebDomain: config.cognitoDomainURL,
             TokenScopesArray: config.cognitoTokenScopes,
             RedirectUriSignIn: landingURL,
             RedirectUriSignOut: frontendURL,
-            UserPoolId: config.cognitoUserPoolId, // Your user pool id here
-            Storage: cookieStorage
+            UserPoolId: config.cognitoUserPoolId //, // Your user pool id here
+            // Storage: cookieStorage
         };
 
         var auth = new AmazonCognitoIdentity.CognitoAuth(authData);
@@ -75,10 +77,13 @@
         var curUrl = window.location.href;
         auth.parseCognitoWebResponse(curUrl);
 
-        setTimeout(function(){if (!auth || !(auth.getSignInUserSession().isValid())) {
-            alert("You're session has expired. Please login again.");
-            window.location.href = loginURL;
-        }}, 3000);
+        setTimeout(function () {
+            if (!auth || !(auth.getSignInUserSession().isValid())) {
+                alert("You're session has expired. Please login again.");
+                window.location.href = loginURL;
+            }
+            $('#waitmsg').hide();
+        }, 3000);
 
         function storeAuthDetails() {
             sessionStorage.clear();
@@ -90,33 +95,35 @@
 
         function decideNextStep(auth) {
             var userid = sessionStorage.getItem("userid");
-            var idToken = cookieStorage.getItem("CognitoIdentityServiceProvider." + config.cognitoClientId + "." + userid + ".idToken");
+            var idToken = localStorage.getItem("CognitoIdentityServiceProvider." + config.cognitoClientId + "." + userid + ".idToken");
             var API_URL = backendURL + '/profilemgmt/-/' + userid;
-            $.ajax
-                (
-                    {
-                        type: 'GET',
-                        url: API_URL,
-                        headers: { 'Authorization': idToken },
-                        success: function (data) {
-                            if (data.length === 0) {
-                                $('body').show();
-                                $('#signoutlink').prop("href", logoutURL);
+            if (idToken !== null) {
+                $.ajax
+                    (
+                        {
+                            type: 'GET',
+                            url: API_URL,
+                            headers: { 'Authorization': idToken },
+                            success: function (data) {
+                                if (data.length === 0) {
+                                    $('#hdr').show();
+                                    $('#signoutlink').prop("href", logoutURL);
 
-                                sessionStorage.removeItem("userFound");
-                                setUserRole();
-                            }
-                            else {
-                                $("body").data("userdetails", data[0]);
-                                var userrole = data[0].UserRole;
-                                sessionStorage.setItem("userFound", "true");
-                                sessionStorage.setItem("userrole", userrole);
-                                sessionStorage.setItem("userprofile", JSON.stringify(data[0]));
-                                window.location.replace('/Prod/homepage');
+                                    sessionStorage.removeItem("userFound");
+                                    setUserRole();
+                                }
+                                else {
+                                    $("body").data("userdetails", data[0]);
+                                    var userrole = data[0].UserRole;
+                                    sessionStorage.setItem("userFound", "true");
+                                    sessionStorage.setItem("userrole", userrole);
+                                    sessionStorage.setItem("userprofile", JSON.stringify(data[0]));
+                                    window.location.replace('/Prod/homepage');
+                                }
                             }
                         }
-                    }
-                )
+                    )
+            }
         }
 
         function setUserRole() {
