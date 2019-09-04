@@ -51,7 +51,7 @@
             RedirectUriSignIn: landingURL,
             RedirectUriSignOut: frontendURL,
             UserPoolId: config.cognitoUserPoolId, // Your user pool id here
-            Storage: window.sessionStorage
+            Storage: sessionStorage
         };
 
         var auth = new AmazonCognitoIdentity.CognitoAuth(authData);
@@ -66,6 +66,8 @@
             }
         };
         auth.useCodeGrantFlow();
+        console.log(authData);
+        console.log(auth);
 
         var curUrl = window.location.href;
         auth.parseCognitoWebResponse(curUrl);
