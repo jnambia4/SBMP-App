@@ -44,6 +44,7 @@
 
     <script type="text/javascript">
         $('body').hide();
+        var cookieData = { domain: window.location.hostname };
         var authData = {
             ClientId: config.cognitoClientId, // Your client id here
             AppWebDomain: config.cognitoDomainURL,
@@ -51,7 +52,7 @@
             RedirectUriSignIn: landingURL,
             RedirectUriSignOut: frontendURL,
             UserPoolId: config.cognitoUserPoolId, // Your user pool id here
-            Storage: new CookieStorage()
+            Storage: new AmazonCognitoIdentity.CookieStorage(cookieData)
         };
 
         var auth = new AmazonCognitoIdentity.CognitoAuth(authData);
