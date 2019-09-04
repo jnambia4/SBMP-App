@@ -50,8 +50,7 @@
             TokenScopesArray: config.cognitoTokenScopes,
             RedirectUriSignIn: landingURL,
             RedirectUriSignOut: frontendURL,
-            UserPoolId: config.cognitoUserPoolId, // Your user pool id here
-            Storage: sessionStorage
+            UserPoolId: config.cognitoUserPoolId // Your user pool id here
         };
 
         var auth = new AmazonCognitoIdentity.CognitoAuth(authData);
