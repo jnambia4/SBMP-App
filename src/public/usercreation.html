@@ -173,12 +173,15 @@
                                                 headers: { 'Authorization': idToken },
                                                 data: attributeJson,
                                                 success: function (data) {
-                                                    if (data.length > 0) {
+                                                    //if (data.length > 0) {
                                                         sessionStorage.setItem("userFound", "true");
                                                         $("body").data("addprofile", data);
                                                         console.log(data);
-                                                        window.location.replace('/Prod/homepage');
-                                                    }
+                                                        var checkMobile = sessionStorage.getItem("mobiledevice"); 
+                                                        if (checkMobile !== "true") {
+                                                            window.location.replace('/Prod/homepage');
+                                                        }
+                                                    //}
                                                 }
                                             }
                                         )
@@ -201,12 +204,15 @@
                                             headers: { 'Authorization': idToken },
                                             data: attributeJson,
                                             success: function (data) {
-                                                if (data.length > 0) {
+                                                //if (data.length > 0) {
                                                     sessionStorage.setItem("userFound", "true");
                                                     $("body").data("addprofile", data);
                                                     console.log(data);
-                                                    window.location.replace('/Prod/homepage');
-                                                }
+                                                    var checkMobile = sessionStorage.getItem("mobiledevice"); 
+                                                    if (checkMobile !== "true") {
+                                                        window.location.replace('/Prod/homepage');
+                                                    }
+                                                //}
                                             }
                                         }
                                     )

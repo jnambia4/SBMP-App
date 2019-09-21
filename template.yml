@@ -75,6 +75,34 @@ Resources:
           Properties:
             Path: /usercreation
             Method: get
+  MobileLoginUI:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/mobilelogin.get
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+      Events:
+        GetEvent:
+          Type: Api
+          Properties:
+            Path: /mobilelogin
+            Method: get
+  MobileLogoutUI:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/mobilelogout.get
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+      Events:
+        GetEvent:
+          Type: Api
+          Properties:
+            Path: /mobilelogout
+            Method: get
   HomePageUI:
     Type: AWS::Serverless::Function
     Properties:
