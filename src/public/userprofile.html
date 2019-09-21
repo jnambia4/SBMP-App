@@ -96,31 +96,7 @@
                     $("body").show();
 
                     var userprofile = JSON.parse(sessionStorage.getItem("userprofile"));
-                    var idToken = localStorage.getItem("CognitoIdentityServiceProvider." + config.cognitoClientId + "." + userid + ".idToken");
-
-                    if (!userprofile) {
-                        var API_URL = backendURL + '/profilemgmt/-/' + userid;
-                        $.ajax
-                            (
-                                {
-                                    type: 'GET',
-                                    url: API_URL,
-                                    headers: { 'Authorization': idToken },
-                                    success: function (data) {
-                                        if (data.length > 0) {
-                                            $("body").data("userdetails", data[0]);
-                                            var userrole = data[0].UserRole;
-                                            sessionStorage.setItem("userFound", "true");
-                                            sessionStorage.setItem("userprofile", JSON.stringify(data[0]));
-                                            userprofile = data[0];
-                                            display(userprofile);
-                                        }
-                                    }
-                                }
-                            )
-                    }
-                    else
-                        display(userprofile);
+                    display(userprofile);
                 }
                 else {
                     alert("You're session has expired. Please login again.");

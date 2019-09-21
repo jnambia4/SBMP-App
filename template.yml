@@ -61,6 +61,20 @@ Resources:
           Properties:
             Path: /landing
             Method: get
+  UserCreationUI:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/usercreation.get
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+      Events:
+        GetEvent:
+          Type: Api
+          Properties:
+            Path: /usercreation
+            Method: get
   HomePageUI:
     Type: AWS::Serverless::Function
     Properties:

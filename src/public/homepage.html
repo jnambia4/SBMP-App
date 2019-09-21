@@ -110,141 +110,27 @@
 
                     $("body").show();
 
-                    var idToken = localStorage.getItem("CognitoIdentityServiceProvider." + config.cognitoClientId + "." + userid + ".idToken");
-
-                    cognitoUser.getUserAttributes(function (err, result) {
-                        if (err) {
-                            alert(err);
-                            return;
-                        }
-
-                        var checkRole = false;
-                        var roleAttribute = 'custom:userrole';
-                        var svcprAttribute = 'custom:svcprtype';
-                        var attributeArray = {
-                            "UserId": userid,
-                            "CreatedBy": "sbmpsignup"
-                        };
-                        console.log(result);
-
-                        for (i = 0; i < result.length; i++) {
-                            var attributeName = result[i].getName();
-                            var attributeValue = result[i].getValue();
-                            var spColName;
-
-                            console.log('attribute ' + attributeName + ' has value ' + attributeValue);
-                            switch (attributeName) {
-                                case roleAttribute:
-                                    spColName = "UserRole";
-                                    checkRole = true;
-                                    break;
-                                case svcprAttribute:
-                                    spColName = "SvcPrType";
-                                    checkRole = true;
-                                    break;
-                                case "name":
-                                    spColName = "UserName";
-                                    break;
-                                case "phone_number":
-                                    spColName = "UserPhone";
-                                    break;
-                                case "email":
-                                    spColName = "UserEmail";
-                                    break;
-                                case "address":
-                                    spColName = "UserAddress"
-                                    break;
-                                default:
-                                    spColName = "";
-                            }
-
-                            if (spColName != "")
-                                attributeArray[spColName] = attributeValue;
-                        }
-                        console.log(attributeArray);
-                        console.log(checkRole);
-
-                        // if user is newly created in Cognito and doesnt have user role
-                        if (!checkRole) {
-                            var attributeList = [];
-                            var attribute1 = {
-                                Name: roleAttribute,
-                                Value: userrole
-                            };
-                            var attribute11 = new AmazonCognitoIdentity.CognitoUserAttribute(attribute1);
-                            attributeList.push(attribute11);
-                            console.log(attribute11);
-                            var attribute2 = {
-                                Name: svcprAttribute,
-                                Value: svcprtype
-                            };
-                            var attribute22 = new AmazonCognitoIdentity.CognitoUserAttribute(attribute2);
-                            attributeList.push(attribute22);
-                            console.log(attribute22);
-                            cognitoUser.updateAttributes(attributeList, function (err, result) {
-                                if (err) {
-                                    alert(err);
-                                    return;
-                                }
-                                console.log('call result: ' + result);
-                                console.log('attribute ' + roleAttribute + ' has value ' + userrole);
-                                attributeArray["UserRole"] = userrole;
-                                console.log('attribute ' + svcprAttribute + ' has value ' + svcprtype);
-                                attributeArray["SvcPrType"] = svcprtype;
-
-                                // if the user is also not found in backend database then create it
-                                if (sessionStorage.getItem("userFound") != "true") {
-                                    console.log(attributeArray);
-
-                                    var API_URL = backendURL + '/profilemgmt';
-                                    var attributeJson = JSON.stringify(attributeArray);
-                                    console.log(attributeJson);
-                                    $.ajax
-                                        (
-                                            {
-                                                type: 'POST',
-                                                url: API_URL,
-                                                headers: { 'Authorization': idToken },
-                                                data: attributeJson,
-                                                success: function (data) {
-                                                    sessionStorage.setItem("userFound", "true");
-                                                    if (data.length > 0) {
-                                                        $("body").data("addprofile", data);
-                                                        console.log(data);
-                                                    }
-                                                }
-                                            }
-                                        )
-                                }
-                            });
-                        }
-                        // if user is already created in Cognito and user role is set but user is missing from backend db
-                        else {
-                            if (sessionStorage.getItem("userFound") != "true") {
-                                console.log(attributeArray);
-
-                                var API_URL = backendURL + '/profilemgmt';
-                                var attributeJson = JSON.stringify(attributeArray);
-                                console.log(attributeJson);
-                                $.ajax
-                                    (
-                                        {
-                                            type: 'POST',
-                                            url: API_URL,
-                                            headers: { 'Authorization': idToken },
-                                            data: attributeJson,
-                                            success: function (data) {
-                                                sessionStorage.setItem("userFound", "true");
-                                                if (data.length > 0) {
-                                                    $("body").data("addprofile", data);
-                                                    console.log(data);
-                                                }
-                                            }
+                    var userprofile = JSON.parse(sessionStorage.getItem("userprofile"));
+                    if (!userprofile) {
+                        var idToken = localStorage.getItem("CognitoIdentityServiceProvider." + config.cognitoClientId + "." + userid + ".idToken");
+                        var API_URL = backendURL + '/profilemgmt/-/' + userid;
+                        $.ajax
+                            (
+                                {
+                                    type: 'GET',
+                                    url: API_URL,
+                                    headers: { 'Authorization': idToken },
+                                    success: function (data) {
+                                        if (data.length > 0) {
+                                            $("body").data("userdetails", data[0]);
+                                            var userrole = data[0].UserRole;
+                                            sessionStorage.setItem("userFound", "true");
+                                            sessionStorage.setItem("userprofile", JSON.stringify(data[0]));
                                         }
-                                    )
-                            }
-                        }
-                    });
+                                    }
+                                }
+                            )
+                    }
                 }
                 else {
                     alert("You're session has expired. Please login again.");

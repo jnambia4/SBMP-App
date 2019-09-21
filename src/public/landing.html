@@ -209,7 +209,7 @@
                 if (roleValue != 'S') {
                     if (confirm("Your selected user role is " + roleText + ". Confirm?")) {
                         sessionStorage.setItem("userrole", roleValue);
-                        window.location.replace('/Prod/homepage');
+                        window.location.replace('/Prod/usercreation');
                     }
                 }
                 else {
@@ -217,7 +217,7 @@
                         if (confirm("Your selected user role is " + roleText + " and your type is " + svcPrText + ". Confirm?")) {
                             sessionStorage.setItem("userrole", roleValue);
                             sessionStorage.setItem("svcprtype", svcPrValue);
-                            window.location.replace('/Prod/homepage');
+                            window.location.replace('/Prod/usercreation');
                         }
                     }
                     else
