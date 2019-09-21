@@ -118,7 +118,7 @@
                                     sessionStorage.setItem("userFound", "true");
                                     sessionStorage.setItem("userrole", userrole);
                                     sessionStorage.setItem("userprofile", JSON.stringify(data[0]));
-                                    var checkMobile = sessionStorage.getItem("mobiledevice"); 
+                                    var checkMobile = localStorage.getItem("mobiledevice"); 
                                     if (checkMobile !== "true") {
                                         window.location.replace('/Prod/homepage');
                                     }

@@ -177,7 +177,7 @@
                                                         sessionStorage.setItem("userFound", "true");
                                                         $("body").data("addprofile", data);
                                                         console.log(data);
-                                                        var checkMobile = sessionStorage.getItem("mobiledevice"); 
+                                                        var checkMobile = localStorage.getItem("mobiledevice"); 
                                                         if (checkMobile !== "true") {
                                                             window.location.replace('/Prod/homepage');
                                                         }
@@ -208,7 +208,7 @@
                                                     sessionStorage.setItem("userFound", "true");
                                                     $("body").data("addprofile", data);
                                                     console.log(data);
-                                                    var checkMobile = sessionStorage.getItem("mobiledevice"); 
+                                                    var checkMobile = localStorage.getItem("mobiledevice"); 
                                                     if (checkMobile !== "true") {
                                                         window.location.replace('/Prod/homepage');
                                                     }
