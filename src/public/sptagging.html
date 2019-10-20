@@ -229,21 +229,14 @@
         }
 
         function remove() {
-            var requestArray = {
-                "PassengerUserId": userid,
-                "SvcPrId": document.getElementById("svcprdel").value
-            };
-            var requestJson = JSON.stringify(requestArray);
-
             var idToken = localStorage.getItem("CognitoIdentityServiceProvider." + config.cognitoClientId + "." + userid + ".idToken");
-            var API_URL = backendURL + '/sptagging';
+            var API_URL = backendURL + '/sptagging/' + userid + '/' + document.getElementById("svcprdel").value;
             $.ajax
                 (
                     {
                         type: 'DELETE',
                         url: API_URL,
                         headers: { 'Authorization': idToken },
-                        data: requestJson,
                         success: function (data) {
                             console.log(data);
                             repopulate();
