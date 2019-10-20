@@ -128,21 +128,7 @@
                     $("body").show();
 
                     $(document).ready(function () {
-                        //Get the list of all Service Providers in the system
-                        var API_URL = backendURL + '/miscsvcs/svcproviders/-/-/-';
-                        $.ajax
-                            (
-                                {
-                                    type: 'GET',
-                                    url: API_URL,
-                                    success: function (data) {
-                                        if (data.length > 0) {
-                                            $("body").data("svcprds", data);
-                                            repopulate();
-                                        }
-                                    }
-                                }
-                            )
+                        repopulate();
                     });
                 }
                 else {
@@ -157,10 +143,10 @@
         }
 
         function repopulate() {
-            $("#svcprstodel").empty();
-            $("#svcprstoadd").empty();
-            resetDel()
-            resetAdd()
+            $("#svcprstodel").empty(); //make drop down empty
+            $("#svcprstoadd").empty(); //make drop down empty
+            resetDel()  //make the text box empty
+            resetAdd() //make the text box empty
             document.getElementById("results").innerHTML = "";
 
             var API_URL = backendURL + '/sptagging/-/' + userid;
@@ -170,13 +156,11 @@
                         type: 'GET',
                         url: API_URL,
                         success: function (data) {
-                            var total = $("body").data("svcprds");
-                            console.log(total);
                             $("body").data("sptaggingresults", data);
                             console.log(data);
                             var html = getHtmlTableFromJSON(data);
                             //console.log(html);
-                            document.getElementById("results").innerHTML = html;
+                            document.getElementById("results").innerHTML = html; //Display the table on top of the SPTagging page
 
                             if (data.length > 0) {
                                 //ServiceProviders to Delete
@@ -185,42 +169,28 @@
                                 var op = svcprtodel.map(function (item) {
                                     return [item.ServiceProviderId, item.ServiceProviderName];
                                 });
-                                for (let item of op) {
+                                for (let item of op) { //Populate the remove drop down from the list of tagged SP
                                     $("#svcprstodel").append($("<option value=" + item[0] + ">" + item[1] + "</option>"));
                                 }
-
-                                //ServiceProviders to Add
-                                if (svcprtodel.length > 0) {
-                                    var opDel = svcprtodel.map(function (item) {
-                                        return item.ServiceProviderId;
-                                    });
-                                    var opTotal = total.map(function (item) {
-                                        return item.ServiceProviderId;
-                                    });
-                                    var opAdd = opTotal.diff(opDel);
-
-                                    var svcprtoadd = [];
-                                    console.log(svcprtoadd);
-                                    for (let i of opAdd) {
-                                        var row = total.filter(function (item) {
-
-                                            return item.ServiceProviderId == i;
-                                        });
-                                        console.log(row[0]);
-                                        svcprtoadd.push(row[0]);
-                                        console.log(svcprtoadd);
-                                    }
-                                    console.log(svcprtoadd);
-                                    var op = svcprtoadd.map(function (item) {
-                                        return [item.ServiceProviderId, item.ServiceProviderName];
-                                    });
-                                    for (let item of op) {
-                                        $("#svcprstoadd").append($("<option value=" + item[0] + ">" + item[1] + "</option>"));
-                                    }
-                                }
                             }
-                            else {
-                                var svcprtoadd = total;
+                        }
+                    }
+                )
+
+            var API_URL = backendURL + '/sptagging/nontagged/-/' + userid;
+            $.ajax
+                (
+                    {
+                        type: 'GET',
+                        url: API_URL,
+                        success: function (data) {
+                            $("body").data("spnontaggingresults", data);
+                            console.log(data);
+
+                            if (data.length > 0) {
+                                //ServiceProviders to Add
+                                var svcprstoadd = data;
+                                console.log(svcprstoadd);
                                 var op = svcprtoadd.map(function (item) {
                                     return [item.ServiceProviderId, item.ServiceProviderName];
                                 });
