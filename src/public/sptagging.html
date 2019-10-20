@@ -230,7 +230,7 @@
 
         function remove() {
             var idToken = localStorage.getItem("CognitoIdentityServiceProvider." + config.cognitoClientId + "." + userid + ".idToken");
-            var API_URL = backendURL + '/sptagging/' + userid + '/' + document.getElementById("svcprdel").value;
+            var API_URL = backendURL + '/sptagging/untag/' + userid + '/' + document.getElementById("svcprdel").value;
             $.ajax
                 (
                     {
