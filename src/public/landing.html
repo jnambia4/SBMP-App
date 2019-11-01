@@ -49,8 +49,11 @@
         $('#hdr').hide();
         // var cookieData = { domain: window.location.hostname };
         // var cookieStorage = new AmazonCognitoIdentity.CookieStorage(cookieData);
+        var checkMobile = localStorage.getItem("mobiledevice");
+        var clientId = ((checkMobile !== "true") ? config.cognitoClientId : config.cognitoMobileClientId);
+
         var authData = {
-            ClientId: config.cognitoClientId, // Your client id here
+            ClientId: clientId, // Your client id here
             AppWebDomain: config.cognitoDomainURL,
             TokenScopesArray: config.cognitoTokenScopes,
             RedirectUriSignIn: landingURL,
@@ -95,7 +98,7 @@
 
         function decideNextStep(auth) {
             var userid = sessionStorage.getItem("userid");
-            var idToken = localStorage.getItem("CognitoIdentityServiceProvider." + config.cognitoClientId + "." + userid + ".idToken");
+            var idToken = localStorage.getItem("CognitoIdentityServiceProvider." + clientId + "." + userid + ".idToken");
             var API_URL = backendURL + '/profilemgmt/-/' + userid;
             if (idToken !== null) {
                 $.ajax
@@ -118,7 +121,6 @@
                                     sessionStorage.setItem("userFound", "true");
                                     sessionStorage.setItem("userrole", userrole);
                                     sessionStorage.setItem("userprofile", JSON.stringify(data[0]));
-                                    var checkMobile = localStorage.getItem("mobiledevice"); 
                                     if (checkMobile !== "true") {
                                         window.location.replace('/Prod/homepage');
                                     }
