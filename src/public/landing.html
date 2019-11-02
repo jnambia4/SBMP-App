@@ -51,13 +51,14 @@
         // var cookieStorage = new AmazonCognitoIdentity.CookieStorage(cookieData);
         var checkMobile = localStorage.getItem("mobiledevice");
         var clientId = ((checkMobile !== "true") ? config.cognitoClientId : config.cognitoMobileClientId);
+        var signoutURL = ((checkMobile !== "true") ? frontendURL : mobileLogoutURL);
 
         var authData = {
             ClientId: clientId, // Your client id here
             AppWebDomain: config.cognitoDomainURL,
             TokenScopesArray: config.cognitoTokenScopes,
             RedirectUriSignIn: landingURL,
-            RedirectUriSignOut: frontendURL,
+            RedirectUriSignOut: signoutURL,
             UserPoolId: config.cognitoUserPoolId //, // Your user pool id here
             // Storage: cookieStorage
         };

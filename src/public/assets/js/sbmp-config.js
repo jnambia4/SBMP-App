@@ -19,3 +19,4 @@ var signupURL = 'https://' + config.cognitoDomainURL + '/signup' + urlfiller + '
 
 var mobileurlfiller = '?response_type=code&client_id=' + config.cognitoMobileClientId + '&';
 var mobileLoginURL = 'https://' + config.cognitoDomainURL + '/login' + mobileurlfiller + 'redirect_uri=' + landingURL;
+var mobileLogoutURL = frontendURL + '/mobilelogout';
