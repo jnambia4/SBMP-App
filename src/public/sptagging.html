@@ -154,7 +154,7 @@
                         },
                         success: function (data) {
                             $("body").data("sptaggingresults", data);
-                            console.log(data);
+                            // console.log(data);
                             var html = getHtmlTableFromJSON(data);
                             //console.log(html);
                             document.getElementById("results").innerHTML = html; //Display the table on top of the SPTagging page
@@ -162,7 +162,7 @@
                             if (data.length > 0) {
                                 //ServiceProviders to Delete
                                 var svcprtodel = data;
-                                console.log(svcprtodel);
+                                // console.log(svcprtodel);
                                 var op = svcprtodel.map(function (item) {
                                     return [item.ServiceProviderId, item.ServiceProviderName];
                                 });
@@ -185,12 +185,12 @@
                         },
                         success: function (data) {
                             $("body").data("spnontaggingresults", data);
-                            console.log(data);
+                            // console.log(data);
 
                             if (data.length > 0) {
                                 //ServiceProviders to Add
                                 var svcprstoadd = data;
-                                console.log(svcprstoadd);
+                                // console.log(svcprstoadd);
                                 var op = svcprstoadd.map(function (item) {
                                     return [item.ServiceProviderId, item.ServiceProviderName];
                                 });
@@ -225,7 +225,7 @@
                         },
                         data: requestJson,
                         success: function (data) {
-                            console.log(data);
+                            // console.log(data);
                             repopulate();
                         }
                     }
@@ -246,7 +246,7 @@
                             'access-token': accessToken
                         },
                         success: function (data) {
-                            console.log(data);
+                            // console.log(data);
                             repopulate();
                         }
                     }
