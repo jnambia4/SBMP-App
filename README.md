@@ -79,7 +79,8 @@ The following back-end platform APIs are used to implement the front-end functio
     GET Request Header (JSON):
       ```json
       {
-          "Authorization": idToken  // JWT ID Token provided by Cognito User Pool upon login
+          "Authorization": idToken,  // JWT ID Token provided by Cognito User Pool upon login
+          "Access-Token": refreshToken  // JWT Refresh Token provided by Cognito User Pool upon login
       }
       ```
 
@@ -100,7 +101,8 @@ The following back-end platform APIs are used to implement the front-end functio
     POST Request Header (JSON):
       ```json
       {
-          "Authorization": idToken  // JWT ID Token provided by Cognito User Pool upon login
+          "Authorization": idToken,  // JWT ID Token provided by Cognito User Pool upon login
+          "Access-Token": refreshToken  // JWT Refresh Token provided by Cognito User Pool upon login
       }
       ```
 
@@ -128,7 +130,8 @@ The following back-end platform APIs are used to implement the front-end functio
     GET Request Header (JSON):
       ```json
       {
-          "Authorization": idToken  // JWT ID Token provided by Cognito User Pool upon login
+          "Authorization": idToken,  // JWT ID Token provided by Cognito User Pool upon login
+          "Access-Token": refreshToken  // JWT Refresh Token provided by Cognito User Pool upon login
       }
       ```
 
@@ -149,13 +152,27 @@ The following back-end platform APIs are used to implement the front-end functio
 
 ### Tag Service Providers page ###
 
-  - Retrieve list of Service Providers
-    
-    GET [/miscsvcs/svcproviders/-/-/-](https://bwdgk504x8.execute-api.ap-southeast-1.amazonaws.com/Prod/miscsvcs/svcproviders/-/-/-)
-
   - Retrieve list of tagged Service Providers
     
     GET [/sptagging/-/{PassengerUserId}](https://bwdgk504x8.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging/-/{PassengerUserId})
+
+    GET Request Header (JSON):
+      ```json
+      {
+          "Access-Token": refreshToken  // JWT Refresh Token provided by Cognito User Pool upon login
+      }
+      ```
+
+  - Retrieve list of Service Providers not tagged
+    
+    GET [/sptagging/nontagged/-/{PassengerUserId}](https://bwdgk504x8.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging/nontagged/-/{PassengerUserId})
+
+    GET Request Header (JSON):
+      ```json
+      {
+          "Access-Token": refreshToken  // JWT Refresh Token provided by Cognito User Pool upon login
+      }
+      ```
 
   - Add Service Provider tagging (needs JWT token from login)
     
@@ -164,7 +181,8 @@ The following back-end platform APIs are used to implement the front-end functio
     POST Request Header (JSON):
       ```json
       {
-          "Authorization": idToken  // JWT ID Token provided by Cognito User Pool upon login
+          "Authorization": idToken,  // JWT ID Token provided by Cognito User Pool upon login
+          "Access-Token": refreshToken  // JWT Refresh Token provided by Cognito User Pool upon login
       }
       ```
 
@@ -179,19 +197,12 @@ The following back-end platform APIs are used to implement the front-end functio
 
   - Remove Service Provider tagging (needs JWT token from login)
     
-    DELETE [/sptagging](https://bwdgk504x8.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging)
+    DELETE [/sptagging/untag/{PassengerUserId}/{SvcPrId}](https://bwdgk504x8.execute-api.ap-southeast-1.amazonaws.com/Prod/sptagging/untag/{PassengerUserId}/{SvcPrId})
 
     DELETE Request Header (JSON):
       ```json
       {
-          "Authorization": idToken  // JWT ID Token provided by Cognito User Pool upon login
-      }
-      ```
-
-    DELETE Request body (JSON):
-      ```json
-      {
-          "PassengerUserId": userid,
-          "SvcPrId": svcprid
+          "Authorization": idToken,  // JWT ID Token provided by Cognito User Pool upon login
+          "Access-Token": refreshToken  // JWT Refresh Token provided by Cognito User Pool upon login
       }
       ```

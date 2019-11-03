@@ -7,15 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>JiRa Shuttle Bus Management Application</title>
     <meta name="description" content="" />
-    <link
-        href="assets/css/w3.css"
-        rel="stylesheet">
-    <link
-        href="assets/css/styles.css"
-        rel="stylesheet">
-    <link
-        href="assets/css/gradients.css"
-        rel="stylesheet">
+    <link href="assets/css/w3.css" rel="stylesheet">
+    <link href="assets/css/styles.css" rel="stylesheet">
+    <link href="assets/css/gradients.css" rel="stylesheet">
 </head>
 
 <body class="w3-responsive">
@@ -31,8 +25,10 @@
                         <div class="w3-dropdown-content w3-bar-block w3-border">
                             <a href="/Prod/profilemgmt" class="w3-bar-item w3-button w3-medium">View Profile</a>
                             <a href="/Prod/routesearch" class="w3-bar-item w3-button w3-medium">Search Routes</a>
-                            <a id="routemgmtlink" href="#" class="w3-bar-item w3-button w3-medium">Manage Routes (Coming Soon...)</a>
-                            <a id="sptagginglink" href="/Prod/sptagging" class="w3-bar-item w3-button w3-medium">Tag Service
+                            <a id="routemgmtlink" href="#" class="w3-bar-item w3-button w3-medium">Manage Routes (Coming
+                                Soon...)</a>
+                            <a id="sptagginglink" href="/Prod/sptagging" class="w3-bar-item w3-button w3-medium">Tag
+                                Service
                                 Providers</a>
                         </div>
                     </li>
@@ -74,12 +70,9 @@
         </div>
     </div>
 
-    <script
-        src="assets/js/set-background.js"></script>
-    <script
-        src="assets/js/amazon-cognito-identity.min.js"></script>
-    <script
-        src="assets/js/sbmp-config.js"></script>
+    <script src="assets/js/set-background.js"></script>
+    <script src="assets/js/amazon-cognito-identity.min.js"></script>
+    <script src="assets/js/sbmp-config.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script type="text/javascript">
         $('body').hide();
@@ -148,6 +141,7 @@
             resetDel()  //make the text box empty
             resetAdd() //make the text box empty
             document.getElementById("results").innerHTML = "";
+            var accessToken = localStorage.getItem("CognitoIdentityServiceProvider." + config.cognitoClientId + "." + userid + ".accessToken");
 
             var API_URL = backendURL + '/sptagging/-/' + userid;
             $.ajax
@@ -155,6 +149,9 @@
                     {
                         type: 'GET',
                         url: API_URL,
+                        headers: {
+                            'Access-Token': accessToken
+                        },
                         success: function (data) {
                             $("body").data("sptaggingresults", data);
                             console.log(data);
@@ -183,6 +180,9 @@
                     {
                         type: 'GET',
                         url: API_URL,
+                        headers: {
+                            'Access-Token': accessToken
+                        },
                         success: function (data) {
                             $("body").data("spnontaggingresults", data);
                             console.log(data);
@@ -212,13 +212,17 @@
             var requestJson = JSON.stringify(requestArray);
 
             var idToken = localStorage.getItem("CognitoIdentityServiceProvider." + config.cognitoClientId + "." + userid + ".idToken");
+            var accessToken = localStorage.getItem("CognitoIdentityServiceProvider." + config.cognitoClientId + "." + userid + ".accessToken");
             var API_URL = backendURL + '/sptagging';
             $.ajax
                 (
                     {
                         type: 'POST',
                         url: API_URL,
-                        headers: { 'Authorization': idToken },
+                        headers: {
+                            'Authorization': idToken,
+                            'Access-Token': accessToken
+                        },
                         data: requestJson,
                         success: function (data) {
                             console.log(data);
@@ -230,13 +234,17 @@
 
         function remove() {
             var idToken = localStorage.getItem("CognitoIdentityServiceProvider." + config.cognitoClientId + "." + userid + ".idToken");
+            var accessToken = localStorage.getItem("CognitoIdentityServiceProvider." + config.cognitoClientId + "." + userid + ".accessToken");
             var API_URL = backendURL + '/sptagging/untag/' + userid + '/' + document.getElementById("svcprdel").value;
             $.ajax
                 (
                     {
                         type: 'DELETE',
                         url: API_URL,
-                        headers: { 'Authorization': idToken },
+                        headers: {
+                            'Authorization': idToken,
+                            'Access-Token': accessToken
+                        },
                         success: function (data) {
                             console.log(data);
                             repopulate();

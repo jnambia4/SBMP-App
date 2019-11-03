@@ -74,6 +74,7 @@
                     $("body").show();
 
                     var idToken = localStorage.getItem("CognitoIdentityServiceProvider." + config.cognitoClientId + "." + userid + ".idToken");
+                    var accessToken = localStorage.getItem("CognitoIdentityServiceProvider." + config.cognitoClientId + "." + userid + ".accessToken");
 
                     cognitoUser.getUserAttributes(function (err, result) {
                         if (err) {
@@ -170,17 +171,20 @@
                                             {
                                                 type: 'POST',
                                                 url: API_URL,
-                                                headers: { 'Authorization': idToken },
+                                                headers: {
+                                                    'Authorization': idToken,
+                                                    'Access-Token': accessToken
+                                                },
                                                 data: attributeJson,
                                                 success: function (data) {
                                                     //if (data.length > 0) {
-                                                        sessionStorage.setItem("userFound", "true");
-                                                        $("body").data("addprofile", data);
-                                                        console.log(data);
-                                                        var checkMobile = localStorage.getItem("mobiledevice"); 
-                                                        if (checkMobile !== "true") {
-                                                            window.location.replace('/Prod/homepage');
-                                                        }
+                                                    sessionStorage.setItem("userFound", "true");
+                                                    $("body").data("addprofile", data);
+                                                    console.log(data);
+                                                    var checkMobile = localStorage.getItem("mobiledevice");
+                                                    if (checkMobile !== "true") {
+                                                        window.location.replace('/Prod/homepage');
+                                                    }
                                                     //}
                                                 }
                                             }
@@ -201,17 +205,20 @@
                                         {
                                             type: 'POST',
                                             url: API_URL,
-                                            headers: { 'Authorization': idToken },
+                                            headers: {
+                                                'Authorization': idToken,
+                                                'Access-Token': accessToken
+                                            },
                                             data: attributeJson,
                                             success: function (data) {
                                                 //if (data.length > 0) {
-                                                    sessionStorage.setItem("userFound", "true");
-                                                    $("body").data("addprofile", data);
-                                                    console.log(data);
-                                                    var checkMobile = localStorage.getItem("mobiledevice"); 
-                                                    if (checkMobile !== "true") {
-                                                        window.location.replace('/Prod/homepage');
-                                                    }
+                                                sessionStorage.setItem("userFound", "true");
+                                                $("body").data("addprofile", data);
+                                                console.log(data);
+                                                var checkMobile = localStorage.getItem("mobiledevice");
+                                                if (checkMobile !== "true") {
+                                                    window.location.replace('/Prod/homepage');
+                                                }
                                                 //}
                                             }
                                         }

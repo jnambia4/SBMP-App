@@ -7,15 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>JiRa Shuttle Bus Management Application</title>
     <meta name="description" content="" />
-    <link
-        href="assets/css/w3.css"
-        rel="stylesheet">
-    <link
-        href="assets/css/styles.css"
-        rel="stylesheet">
-    <link
-        href="assets/css/gradients.css"
-        rel="stylesheet">
+    <link href="assets/css/w3.css" rel="stylesheet">
+    <link href="assets/css/styles.css" rel="stylesheet">
+    <link href="assets/css/gradients.css" rel="stylesheet">
 </head>
 
 <body class="w3-responsive">
@@ -55,12 +49,9 @@
         </div>
     </div>
 
-    <script
-        src="assets/js/set-background.js"></script>
-    <script
-        src="assets/js/amazon-cognito-identity.min.js"></script>
-    <script
-        src="assets/js/sbmp-config.js"></script>
+    <script src="assets/js/set-background.js"></script>
+    <script src="assets/js/amazon-cognito-identity.min.js"></script>
+    <script src="assets/js/sbmp-config.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
     <script type="text/javascript">
@@ -113,13 +104,17 @@
                     var userprofile = JSON.parse(sessionStorage.getItem("userprofile"));
                     if (!userprofile) {
                         var idToken = localStorage.getItem("CognitoIdentityServiceProvider." + config.cognitoClientId + "." + userid + ".idToken");
+                        var accessToken = localStorage.getItem("CognitoIdentityServiceProvider." + config.cognitoClientId + "." + userid + ".accessToken");
                         var API_URL = backendURL + '/profilemgmt/-/' + userid;
                         $.ajax
                             (
                                 {
                                     type: 'GET',
                                     url: API_URL,
-                                    headers: { 'Authorization': idToken },
+                                    headers: {
+                                        'Authorization': idToken,
+                                        'Access-Token': accessToken
+                                    },
                                     success: function (data) {
                                         if (data.length > 0) {
                                             $("body").data("userdetails", data[0]);

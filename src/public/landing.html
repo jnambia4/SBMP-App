@@ -100,6 +100,7 @@
         function decideNextStep(auth) {
             var userid = sessionStorage.getItem("userid");
             var idToken = localStorage.getItem("CognitoIdentityServiceProvider." + clientId + "." + userid + ".idToken");
+            var accessToken = localStorage.getItem("CognitoIdentityServiceProvider." + config.cognitoClientId + "." + userid + ".accessToken");
             var API_URL = backendURL + '/profilemgmt/-/' + userid;
             if (idToken !== null) {
                 $.ajax
@@ -107,7 +108,10 @@
                         {
                             type: 'GET',
                             url: API_URL,
-                            headers: { 'Authorization': idToken },
+                            headers: {
+                                'Authorization': idToken,
+                                'Access-Token': accessToken
+                            },
                             success: function (data) {
                                 if (data.length === 0) {
                                     $('#hdr').show();
