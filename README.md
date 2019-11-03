@@ -80,7 +80,7 @@ The following back-end platform APIs are used to implement the front-end functio
       ```json
       {
           "Authorization": idToken,  // JWT ID Token provided by Cognito User Pool upon login
-          "Access-Token": accessToken  // JWT Access Token provided by Cognito User Pool upon login
+          "access-token": accessToken  // JWT Access Token provided by Cognito User Pool upon login
       }
       ```
 
@@ -102,7 +102,7 @@ The following back-end platform APIs are used to implement the front-end functio
       ```json
       {
           "Authorization": idToken,  // JWT ID Token provided by Cognito User Pool upon login
-          "Access-Token": accessToken  // JWT Access Token provided by Cognito User Pool upon login
+          "access-token": accessToken  // JWT Access Token provided by Cognito User Pool upon login
       }
       ```
 
@@ -131,7 +131,7 @@ The following back-end platform APIs are used to implement the front-end functio
       ```json
       {
           "Authorization": idToken,  // JWT ID Token provided by Cognito User Pool upon login
-          "Access-Token": accessToken  // JWT Access Token provided by Cognito User Pool upon login
+          "access-token": accessToken  // JWT Access Token provided by Cognito User Pool upon login
       }
       ```
 
@@ -159,7 +159,7 @@ The following back-end platform APIs are used to implement the front-end functio
     GET Request Header (JSON):
       ```json
       {
-          "Access-Token": accessToken  // JWT Access Token provided by Cognito User Pool upon login
+          "access-token": accessToken  // JWT Access Token provided by Cognito User Pool upon login
       }
       ```
 
@@ -170,7 +170,7 @@ The following back-end platform APIs are used to implement the front-end functio
     GET Request Header (JSON):
       ```json
       {
-          "Access-Token": accessToken  // JWT Access Token provided by Cognito User Pool upon login
+          "access-token": accessToken  // JWT Access Token provided by Cognito User Pool upon login
       }
       ```
 
@@ -182,7 +182,7 @@ The following back-end platform APIs are used to implement the front-end functio
       ```json
       {
           "Authorization": idToken,  // JWT ID Token provided by Cognito User Pool upon login
-          "Access-Token": accessToken  // JWT Access Token provided by Cognito User Pool upon login
+          "access-token": accessToken  // JWT Access Token provided by Cognito User Pool upon login
       }
       ```
 
@@ -203,6 +203,6 @@ The following back-end platform APIs are used to implement the front-end functio
       ```json
       {
           "Authorization": idToken,  // JWT ID Token provided by Cognito User Pool upon login
-          "Access-Token": accessToken  // JWT Access Token provided by Cognito User Pool upon login
+          "access-token": accessToken  // JWT Access Token provided by Cognito User Pool upon login
       }
       ```
