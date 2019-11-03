@@ -18,5 +18,6 @@ var logoutURL = 'https://' + config.cognitoDomainURL + '/logout' + urlfiller + '
 var signupURL = 'https://' + config.cognitoDomainURL + '/signup' + urlfiller + 'redirect_uri=' + landingURL;
 
 var mobileurlfiller = '?response_type=code&client_id=' + config.cognitoMobileClientId + '&';
+var mobileLogout = '/mobileLogout';
 var mobileLoginURL = 'https://' + config.cognitoDomainURL + '/login' + mobileurlfiller + 'redirect_uri=' + landingURL;
-var mobileLogoutURL = frontendURL + '/mobilelogout';
+var mobileLogoutURL = 'https://' + config.cognitoDomainURL + '/logout' + mobileurlfiller + 'logout_uri=' + frontendURL + mobileLogout;

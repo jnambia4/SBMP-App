@@ -51,14 +51,15 @@
         // var cookieStorage = new AmazonCognitoIdentity.CookieStorage(cookieData);
         var checkMobile = localStorage.getItem("mobiledevice");
         var clientId = ((checkMobile !== "true") ? config.cognitoClientId : config.cognitoMobileClientId);
-        var signoutURL = ((checkMobile !== "true") ? frontendURL : mobileLogoutURL);
+        var logoutRedirectURL = ((checkMobile !== "true") ? frontendURL : (frontendURL + mobileLogout));
+        var signoutURL = ((checkMobile !== "true") ? logoutURL : mobileLogoutURL);
 
         var authData = {
             ClientId: clientId, // Your client id here
             AppWebDomain: config.cognitoDomainURL,
             TokenScopesArray: config.cognitoTokenScopes,
             RedirectUriSignIn: landingURL,
-            RedirectUriSignOut: signoutURL,
+            RedirectUriSignOut: logoutRedirectURL,
             UserPoolId: config.cognitoUserPoolId //, // Your user pool id here
             // Storage: cookieStorage
         };
@@ -115,7 +116,7 @@
                             success: function (data) {
                                 if (data.length === 0) {
                                     $('#hdr').show();
-                                    $('#signoutlink').prop("href", logoutURL);
+                                    $('#signoutlink').prop("href", signoutURL);
 
                                     sessionStorage.removeItem("userFound");
                                     setUserRole();

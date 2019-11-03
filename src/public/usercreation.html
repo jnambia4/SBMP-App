@@ -41,7 +41,10 @@
 
     <script type="text/javascript">
         $('body').hide();
-        $('#signoutlink').prop("href", logoutURL);
+        var checkMobile = localStorage.getItem("mobiledevice");
+        var clientId = ((checkMobile !== "true") ? config.cognitoClientId : config.cognitoMobileClientId);
+        var signoutURL = ((checkMobile !== "true") ? logoutURL : mobileLogoutURL);
+        $('#signoutlink').prop("href", signoutURL);
 
         var userid = sessionStorage.getItem("userid");
         var userrole = sessionStorage.getItem("userrole");
@@ -50,7 +53,7 @@
         var auth = sessionStorage.getItem("loggedIn");
         var data = {
             UserPoolId: config.cognitoUserPoolId,
-            ClientId: config.cognitoClientId
+            ClientId: clientId
         };
         var userPool = new AmazonCognitoIdentity.CognitoUserPool(data);
         var cognitoUser = userPool.getCurrentUser();
@@ -73,8 +76,8 @@
 
                     $("body").show();
 
-                    var idToken = localStorage.getItem("CognitoIdentityServiceProvider." + config.cognitoClientId + "." + userid + ".idToken");
-                    var accessToken = localStorage.getItem("CognitoIdentityServiceProvider." + config.cognitoClientId + "." + userid + ".accessToken");
+                    var idToken = localStorage.getItem("CognitoIdentityServiceProvider." + clientId + "." + userid + ".idToken");
+                    var accessToken = localStorage.getItem("CognitoIdentityServiceProvider." + clientId + "." + userid + ".accessToken");
 
                     cognitoUser.getUserAttributes(function (err, result) {
                         if (err) {
