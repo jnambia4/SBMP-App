@@ -51,7 +51,7 @@
         // var cookieStorage = new AmazonCognitoIdentity.CookieStorage(cookieData);
         var checkMobile = localStorage.getItem("mobiledevice");
         var clientId = ((checkMobile !== "true") ? config.cognitoClientId : config.cognitoMobileClientId);
-        var logoutRedirectURL = ((checkMobile !== "true") ? frontendURL : (frontendURL + mobileLogout));
+        var logoutRedirectURL = ((checkMobile !== "true") ? frontendURL : mobileLogout);
         var signoutURL = ((checkMobile !== "true") ? logoutURL : mobileLogoutURL);
 
         var authData = {
@@ -75,7 +75,12 @@
                 alert("Error!");
             }
         };
-        auth.useCodeGrantFlow();
+
+        // If mobile use Auth Grant flow, otherwise Implicit grant flow
+        if (checkMobile == "true") {
+            auth.useCodeGrantFlow();
+        }
+
         console.log(authData);
         console.log(auth);
 

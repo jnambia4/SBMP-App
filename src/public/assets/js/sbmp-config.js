@@ -12,12 +12,12 @@ var config =
 var frontendURL = config.sbmpFrontendURL;
 var landingURL = frontendURL + '/landing';
 var backendURL = config.sbmpBackendURL;
-var urlfiller = '?response_type=code&client_id=' + config.cognitoClientId + '&';
+var urlfiller = '?response_type=token&client_id=' + config.cognitoClientId + '&';
 var loginURL = 'https://' + config.cognitoDomainURL + '/login' + urlfiller + 'redirect_uri=' + landingURL;
 var logoutURL = 'https://' + config.cognitoDomainURL + '/logout' + urlfiller + 'logout_uri=' + frontendURL;
 var signupURL = 'https://' + config.cognitoDomainURL + '/signup' + urlfiller + 'redirect_uri=' + landingURL;
 
 var mobileurlfiller = '?response_type=code&client_id=' + config.cognitoMobileClientId + '&';
-var mobileLogout = '/mobileLogout';
+var mobileLogout = frontendURL + '/mobileLogout';
 var mobileLoginURL = 'https://' + config.cognitoDomainURL + '/login' + mobileurlfiller + 'redirect_uri=' + landingURL;
-var mobileLogoutURL = 'https://' + config.cognitoDomainURL + '/logout' + mobileurlfiller + 'logout_uri=' + frontendURL + mobileLogout;
+var mobileLogoutURL = 'https://' + config.cognitoDomainURL + '/logout' + mobileurlfiller + 'logout_uri=' + mobileLogout;
