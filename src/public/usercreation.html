@@ -31,6 +31,12 @@
             <p class="w3-padding" style="font-size:x-large" id="waitmsg">
                 Loading. Please wait ...
             </p>
+            <p class="w3-padding" id="userroles">
+            </p>
+            <p class="w3-padding" id="svcprtypes">
+            </p>
+            <p class="w3-padding" id="submitbtnp">
+            </p>
         </div>
     </div>
 
@@ -47,8 +53,6 @@
         $('#signoutlink').prop("href", signoutURL);
 
         var userid = sessionStorage.getItem("userid");
-        var userrole = sessionStorage.getItem("userrole");
-        var svcprtype = sessionStorage.getItem("svcprtype");
 
         var auth = sessionStorage.getItem("loggedIn");
         var data = {
@@ -133,100 +137,12 @@
 
                         // if user is newly created in Cognito and doesnt have user role
                         if (!checkRole) {
-                            var attributeList = [];
-
-                            var attribute1 = {
-                                Name: roleAttribute,
-                                Value: userrole
-                            };
-                            var attribute11 = new AmazonCognitoIdentity.CognitoUserAttribute(attribute1);
-                            attributeList.push(attribute11);
-                            // console.log(attribute11);
-
-                            var attribute2 = {
-                                Name: svcprAttribute,
-                                Value: svcprtype
-                            };
-                            var attribute22 = new AmazonCognitoIdentity.CognitoUserAttribute(attribute2);
-                            attributeList.push(attribute22);
-                            // console.log(attribute22);
-
-                            cognitoUser.updateAttributes(attributeList, function (err, result) {
-                                if (err) {
-                                    alert(err);
-                                    return;
-                                }
-                                // console.log('call result: ' + result);
-                                // console.log('attribute ' + roleAttribute + ' has value ' + userrole);
-                                attributeArray["UserRole"] = userrole;
-                                // console.log('attribute ' + svcprAttribute + ' has value ' + svcprtype);
-                                attributeArray["SvcPrType"] = svcprtype;
-
-                                // if the user is also not found in backend database then create it
-                                if (sessionStorage.getItem("userFound") != "true") {
-                                    // console.log(attributeArray);
-
-                                    var API_URL = backendURL + '/profilemgmt';
-                                    var attributeJson = JSON.stringify(attributeArray);
-                                    // console.log(attributeJson);
-                                    $.ajax
-                                        (
-                                            {
-                                                type: 'POST',
-                                                url: API_URL,
-                                                headers: {
-                                                    'Authorization': idToken,
-                                                    'access-token': accessToken
-                                                },
-                                                data: attributeJson,
-                                                success: function (data) {
-                                                    //if (data.length > 0) {
-                                                    sessionStorage.setItem("userFound", "true");
-                                                    $("body").data("addprofile", data);
-                                                    // console.log(data);
-                                                    var checkMobile = localStorage.getItem("mobiledevice");
-                                                    if (checkMobile !== "true") {
-                                                        window.location.replace('/Prod/homepage');
-                                                    }
-                                                    //}
-                                                }
-                                            }
-                                        )
-                                }
-                            });
+                            $('#waitmsg').hide();
+                            setUserRole();
                         }
                         // if user is already created in Cognito and user role is set but user is missing from backend db
                         else {
-                            if (sessionStorage.getItem("userFound") != "true") {
-                                // console.log(attributeArray);
-
-                                var API_URL = backendURL + '/profilemgmt';
-                                var attributeJson = JSON.stringify(attributeArray);
-                                // console.log(attributeJson);
-                                $.ajax
-                                    (
-                                        {
-                                            type: 'POST',
-                                            url: API_URL,
-                                            headers: {
-                                                'Authorization': idToken,
-                                                'access-token': accessToken
-                                            },
-                                            data: attributeJson,
-                                            success: function (data) {
-                                                //if (data.length > 0) {
-                                                sessionStorage.setItem("userFound", "true");
-                                                $("body").data("addprofile", data);
-                                                // console.log(data);
-                                                var checkMobile = localStorage.getItem("mobiledevice");
-                                                if (checkMobile !== "true") {
-                                                    window.location.replace('/Prod/homepage');
-                                                }
-                                                //}
-                                            }
-                                        }
-                                    )
-                            }
+                            createUserProfile();
                         }
                     });
                 }
@@ -239,6 +155,173 @@
         else {
             alert("You're session has expired. Please login again.");
             window.location.href = loginURL;
+        }
+
+        function setUserRole() {
+            var API_URL = backendURL + '/miscsvcs/userroles';
+            $.ajax
+                (
+                    {
+                        type: 'GET',
+                        url: API_URL,
+                        success: function (userRolesObj) {
+                            if (userRolesObj.length > 0) {
+                                $("body").data("userrolelist", userRolesObj);
+                                var htmlText = "<br><h3>Please select the user role for first time user registration</h3><br>"
+                                htmlText += "<h6>Note: Once the user role is submitted, it cannot be modified.</h6><br>"
+                                var html = $(htmlText);
+                                html.appendTo('#userroles');
+
+                                for (var i = 0; i < userRolesObj.length; i++) {
+                                    var text = '<label class="w3-btn"><input type="radio" name="userrole" onchange=toggleSvcPrTypes() value="' + userRolesObj[i].UserRole + '"> ' + userRolesObj[i].UserDesc + '</label><br><br>';
+                                    var radioBtn = $(text);
+                                    radioBtn.appendTo('#userroles');
+                                }
+
+                                setSvcPrType();
+                            }
+                        }
+                    }
+                )
+        }
+
+        function setSvcPrType() {
+            var API_URL = backendURL + '/miscsvcs/svcprtypes';
+            $.ajax
+                (
+                    {
+                        type: 'GET',
+                        url: API_URL,
+                        success: function (svcPrTypesObj) {
+                            if (svcPrTypesObj.length > 0) {
+                                $("body").data("svcprtypelist", svcPrTypesObj);
+                                var htmlText = "<br><h3>Please select the type of Service Provider</h3><br>"
+                                var html = $(htmlText);
+                                html.appendTo('#svcprtypes');
+
+                                for (var i = 0; i < svcPrTypesObj.length; i++) {
+                                    var text = '<label class="w3-btn"><input type="radio" name="svcprtype" value="' + svcPrTypesObj[i].SvcPrType + '"> ' + svcPrTypesObj[i].SvcPrTypeName + '</label><br><br>';
+                                    var radioBtn = $(text);
+                                    radioBtn.appendTo('#svcprtypes');
+                                }
+
+                                $("input[name='svcprtype']").prop('disabled', true);
+                                $("#svcprtypes").hide();
+
+                                var button = $('<button id="submitButton" class="w3-btn w3-card w3-xlarge w3-border w3-round" onclick=submitFunction()>Submit</button>')
+                                button.appendTo('#submitbtnp')
+                            }
+                        }
+                    }
+                )
+        }
+
+        function toggleSvcPrTypes() {
+            var radioValue = $("input[name='userrole']:checked").val();
+            if (radioValue == 'S') {
+                $("input[name='svcprtype']").prop('disabled', false);
+                $("#svcprtypes").show();
+            }
+            else {
+                $("input[name='svcprtype']").prop('disabled', true);
+                $("input[name='svcprtype']").prop('checked', false);
+                $("#svcprtypes").hide();
+            }
+        }
+
+        function submitFunction() {
+            var roleValue = $("input[name='userrole']:checked").val();
+            var roleText = $("input[name='userrole']:checked").parent('label').text();
+
+            var svcPrValue = $("input[name='svcprtype']:checked").val();
+            var svcPrText = $("input[name='svcprtype']:checked").parent('label').text();
+
+            var attributeList = [];
+            var attribute1 = {
+                Name: roleAttribute,
+                Value: roleValue
+            };
+            var attribute2 = {
+                Name: svcprAttribute,
+                Value: svcPrValue
+            };
+            var attribute11 = new AmazonCognitoIdentity.CognitoUserAttribute(attribute1);
+            var attribute22 = new AmazonCognitoIdentity.CognitoUserAttribute(attribute2);
+
+            if (roleValue) {
+                if (roleValue != 'S') {
+                    if (confirm("Your selected user role is " + roleText + ". Confirm?")) {
+                        sessionStorage.setItem("userrole", roleValue);
+                        attributeList.push(attribute11);
+                        attributeArray["UserRole"] = roleValue;
+
+                    }
+                }
+                else {
+                    if (svcPrValue) {
+                        if (confirm("Your selected user role is " + roleText + " and your type is " + svcPrText + ". Confirm?")) {
+                            sessionStorage.setItem("userrole", roleValue);
+                            sessionStorage.setItem("svcprtype", svcPrValue);
+
+                            attributeList.push(attribute11);
+                            attributeList.push(attribute22);
+
+                            attributeArray["UserRole"] = roleValue;
+                            attributeArray["SvcPrType"] = svcPrValue;
+                        }
+                    }
+                    else {
+                        alert("Service Provider type is not selected");
+                    }
+
+                }
+
+                cognitoUser.updateAttributes(attributeList, function (err, result) {
+                    if (err) {
+                        alert(err);
+                        return;
+                    }
+
+                    createUserProfile(attributeArray);
+                });
+            }
+            else {
+                alert("No option has been selected");
+            }
+        }
+
+        function createUserProfile(attributeArray) {
+            // if the user is also not found in backend database then create it
+            if (sessionStorage.getItem("userFound") != "true") {
+                // console.log(attributeArray);
+
+                var API_URL = backendURL + '/profilemgmt';
+                var attributeJson = JSON.stringify(attributeArray);
+                // console.log(attributeJson);
+                $.ajax
+                    (
+                        {
+                            type: 'POST',
+                            url: API_URL,
+                            headers: {
+                                'Authorization': idToken,
+                                'access-token': accessToken
+                            },
+                            data: attributeJson,
+                            success: function (data) {
+                                //if (data.length > 0) {
+                                sessionStorage.setItem("userFound", "true");
+                                $("body").data("addprofile", data);
+                                // console.log(data);
+                                var checkMobile = localStorage.getItem("mobiledevice");
+                                if (checkMobile !== "true") {
+                                    window.location.replace('/Prod/homepage');
+                                }
+                                //}
+                            }
+                        }
+                    )
+            }
         }
     </script>
 </body>

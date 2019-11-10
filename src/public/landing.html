@@ -31,12 +31,6 @@
             <p class="w3-padding" style="font-size:x-large" id="waitmsg">
                 Authenticating. Please wait ...
             </p>
-            <p class="w3-padding" id="userroles">
-            </p>
-            <p class="w3-padding" id="svcprtypes">
-            </p>
-            <p class="w3-padding" id="submitbtnp">
-            </p>
         </div>
     </div>
 
@@ -124,7 +118,7 @@
                                     $('#signoutlink').prop("href", signoutURL);
 
                                     sessionStorage.removeItem("userFound");
-                                    setUserRole();
+                                    window.location.replace('/Prod/usercreation');
                                 }
                                 else {
                                     $("body").data("userdetails", data[0]);
@@ -140,109 +134,6 @@
                         }
                     )
             }
-        }
-
-        function setUserRole() {
-            var API_URL = backendURL + '/miscsvcs/userroles';
-            $.ajax
-                (
-                    {
-                        type: 'GET',
-                        url: API_URL,
-                        success: function (userRolesObj) {
-                            if (userRolesObj.length > 0) {
-                                $("body").data("userrolelist", userRolesObj);
-                                var htmlText = "<br><h3>Please select the user role for first time user registration</h3><br>"
-                                htmlText += "<h6>Note: Once the user role is submitted, it cannot be modified.</h6><br>"
-                                var html = $(htmlText);
-                                html.appendTo('#userroles');
-
-                                for (var i = 0; i < userRolesObj.length; i++) {
-                                    var text = '<label class="w3-btn"><input type="radio" name="userrole" onchange=toggleSvcPrTypes() value="' + userRolesObj[i].UserRole + '"> ' + userRolesObj[i].UserDesc + '</label><br><br>';
-                                    var radioBtn = $(text);
-                                    radioBtn.appendTo('#userroles');
-                                }
-
-                                setSvcPrType();
-                            }
-                        }
-                    }
-                )
-        }
-
-        function setSvcPrType() {
-            var API_URL = backendURL + '/miscsvcs/svcprtypes';
-            $.ajax
-                (
-                    {
-                        type: 'GET',
-                        url: API_URL,
-                        success: function (svcPrTypesObj) {
-                            if (svcPrTypesObj.length > 0) {
-                                $("body").data("svcprtypelist", svcPrTypesObj);
-                                var htmlText = "<br><h3>Please select the type of Service Provider</h3><br>"
-                                var html = $(htmlText);
-                                html.appendTo('#svcprtypes');
-
-                                for (var i = 0; i < svcPrTypesObj.length; i++) {
-                                    var text = '<label class="w3-btn"><input type="radio" name="svcprtype" value="' + svcPrTypesObj[i].SvcPrType + '"> ' + svcPrTypesObj[i].SvcPrTypeName + '</label><br><br>';
-                                    var radioBtn = $(text);
-                                    radioBtn.appendTo('#svcprtypes');
-                                }
-
-                                $("input[name='svcprtype']").prop('disabled', true);
-                                $("#svcprtypes").hide();
-
-                                var button = $('<button id="submitButton" class="w3-btn w3-card w3-xlarge w3-border w3-round" onclick=submitFunction()>Submit</button>')
-                                button.appendTo('#submitbtnp')
-                            }
-                        }
-                    }
-                )
-        }
-
-        function toggleSvcPrTypes() {
-            var radioValue = $("input[name='userrole']:checked").val();
-            if (radioValue == 'S') {
-                $("input[name='svcprtype']").prop('disabled', false);
-                $("#svcprtypes").show();
-            }
-            else {
-                $("input[name='svcprtype']").prop('disabled', true);
-                $("input[name='svcprtype']").prop('checked', false);
-                $("#svcprtypes").hide();
-            }
-        }
-
-        function submitFunction() {
-            var roleValue = $("input[name='userrole']:checked").val();
-            var roleText = $("input[name='userrole']:checked").parent('label').text();
-
-            var svcPrValue = $("input[name='svcprtype']:checked").val();
-            var svcPrText = $("input[name='svcprtype']:checked").parent('label').text();
-
-            if (roleValue) {
-                if (roleValue != 'S') {
-                    if (confirm("Your selected user role is " + roleText + ". Confirm?")) {
-                        sessionStorage.setItem("userrole", roleValue);
-                        window.location.replace('/Prod/usercreation');
-                    }
-                }
-                else {
-                    if (svcPrValue) {
-                        if (confirm("Your selected user role is " + roleText + " and your type is " + svcPrText + ". Confirm?")) {
-                            sessionStorage.setItem("userrole", roleValue);
-                            sessionStorage.setItem("svcprtype", svcPrValue);
-                            window.location.replace('/Prod/usercreation');
-                        }
-                    }
-                    else
-                        alert("Service Provider type is not selected");
-
-                }
-            }
-            else
-                alert("No option has been selected");
         }
     </script>
 </body>
