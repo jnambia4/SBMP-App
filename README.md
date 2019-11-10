@@ -20,7 +20,12 @@ Upon successful signup, user will receive a verification email at the email addr
 Cognito User Pool built-in SignIn page
 
 ### [Landing page](https://2qbdm0akjg.execute-api.ap-southeast-1.amazonaws.com/Prod/landing) ###
-For first time user login, this page will provide the choice to user to select the user role in the system. For subsequent logins, this page is a simple redirect to the Home page.
+For first time user login, this page will redirect to the User Creation page.
+For subsequent logins, this page is a simple redirect to the Home page.
+
+### [User Creation page](https://2qbdm0akjg.execute-api.ap-southeast-1.amazonaws.com/Prod/usercreation) ###
+For first time user login, this page will provide the choice to user to select the user role in the system. Then it will add the user profile in the back-end database, based on details returned by Cognito.
+For subsequent logins, this page is a simple redirect to the Home page.
 
 Roles available are:
   - Bus Operator
@@ -33,7 +38,7 @@ Roles available are:
   - Passenger
 
 ### [Home page](https://2qbdm0akjg.execute-api.ap-southeast-1.amazonaws.com/Prod/homepage) ###
-This page provides links to all the various services available to the user, based on the user role. For first time user login, this page also adds the user profile in the back-end database, based on details returned by Cognito.
+This page provides links to all the various services available to the user, based on the user role.
 
   - Common services for all users:
     - View Profile
@@ -84,6 +89,8 @@ The following back-end platform APIs are used to implement the front-end functio
       }
       ```
 
+### User Creation page ###
+
   - Retrieve list of user roles (first time login)
     
     GET [/miscsvcs/userroles](https://bwdgk504x8.execute-api.ap-southeast-1.amazonaws.com/Prod/miscsvcs/userroles)
@@ -91,8 +98,6 @@ The following back-end platform APIs are used to implement the front-end functio
   - Retrieve list of Service Providers types (first time login)
     
     GET [/miscsvcs/svcprtypes](https://bwdgk504x8.execute-api.ap-southeast-1.amazonaws.com/Prod/miscsvcs/svcprtypes)
-
-### Home page ###
 
   - Create user profile (first time login, needs JWT token from login)
     
@@ -118,6 +123,20 @@ The following back-end platform APIs are used to implement the front-end functio
           "UserEmail": useremail,
           "UserAddress": useraddress,
           "CreatedBy": "sbmpsignup"
+      }
+      ```
+
+### Home page ###
+
+  - Retrieve user profile (first time login, needs JWT token from login)
+
+    GET [/profilemgmt/-/{UserId}](https://bwdgk504x8.execute-api.ap-southeast-1.amazonaws.com/Prod/profilemgmt/-/{UserId})
+
+    GET Request Header (JSON):
+      ```json
+      {
+          "Authorization": idToken,  // JWT ID Token provided by Cognito User Pool upon login
+          "access-token": accessToken  // JWT Access Token provided by Cognito User Pool upon login
       }
       ```
 
