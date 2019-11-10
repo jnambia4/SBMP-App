@@ -6,7 +6,7 @@ describe('landing test', function() {
     index.get({ /* event */ }, { /* context */ }, (err, result) => {
       try {
         test.number(result.statusCode).is(200);
-        test.string(result.body).contains('userroles');
+        test.string(result.body).contains('Authenticating');
         test.value(result).hasHeader('content-type', 'text/html');
         done();
       } catch(error) {
