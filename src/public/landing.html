@@ -46,6 +46,7 @@
         var checkMobile = localStorage.getItem("mobiledevice");
         var clientId = ((checkMobile !== "true") ? config.cognitoClientId : config.cognitoMobileClientId);
         var logoutRedirectURL = ((checkMobile !== "true") ? frontendURL : mobileLogout);
+        var signinURL = ((checkMobile !== "true") ? loginURL : mobileLoginURL);
         var signoutURL = ((checkMobile !== "true") ? logoutURL : mobileLogoutURL);
 
         var authData = {
@@ -84,7 +85,7 @@
         setTimeout(function () {
             if (!auth || !(auth.getSignInUserSession().isValid())) {
                 alert("You're session has expired. Please login again.");
-                window.location.href = loginURL;
+                window.location.href = signinURL;
             }
             $('#waitmsg').hide();
         }, 3000);

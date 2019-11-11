@@ -49,6 +49,7 @@
         $('body').hide();
         var checkMobile = localStorage.getItem("mobiledevice");
         var clientId = ((checkMobile !== "true") ? config.cognitoClientId : config.cognitoMobileClientId);
+        var signinURL = ((checkMobile !== "true") ? loginURL : mobileLoginURL);
         var signoutURL = ((checkMobile !== "true") ? logoutURL : mobileLogoutURL);
         $('#signoutlink').prop("href", signoutURL);
 
@@ -71,7 +72,7 @@
                 if (err) {
                     // alert(err);
                     alert("You're session has expired. Please login again.");
-                    window.location.href = loginURL;
+                    window.location.href = signinURL;
                     return;
                 }
                 console.log('session validity: ' + session.isValid());
@@ -147,13 +148,13 @@
                 }
                 else {
                     alert("You're session has expired. Please login again.");
-                    window.location.href = loginURL;
+                    window.location.href = signinURL;
                 }
             });
         }
         else {
             alert("You're session has expired. Please login again.");
-            window.location.href = loginURL;
+            window.location.href = signinURL;
         }
 
         function setUserRole() {
@@ -236,6 +237,9 @@
             var svcPrText = $("input[name='svcprtype']:checked").parent('label').text();
 
             var attributeList = [];
+            var roleAttribute = 'custom:userrole';
+            var svcprAttribute = 'custom:svcprtype';
+
             var attribute1 = {
                 Name: roleAttribute,
                 Value: roleValue
