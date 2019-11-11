@@ -53,6 +53,10 @@
         $('#signoutlink').prop("href", signoutURL);
 
         var userid = sessionStorage.getItem("userid");
+        var attributeArray = {
+            "UserId": userid,
+            "CreatedBy": "sbmpsignup"
+        };
 
         var auth = sessionStorage.getItem("loggedIn");
         var data = {
@@ -80,9 +84,6 @@
 
                     $("body").show();
 
-                    var idToken = localStorage.getItem("CognitoIdentityServiceProvider." + clientId + "." + userid + ".idToken");
-                    var accessToken = localStorage.getItem("CognitoIdentityServiceProvider." + clientId + "." + userid + ".accessToken");
-
                     cognitoUser.getUserAttributes(function (err, result) {
                         if (err) {
                             alert(err);
@@ -92,10 +93,6 @@
                         var checkRole = false;
                         var roleAttribute = 'custom:userrole';
                         var svcprAttribute = 'custom:svcprtype';
-                        var attributeArray = {
-                            "UserId": userid,
-                            "CreatedBy": "sbmpsignup"
-                        };
                         // console.log(result);
 
                         for (i = 0; i < result.length; i++) {
@@ -282,7 +279,7 @@
                         return;
                     }
 
-                    createUserProfile(attributeArray);
+                    createUserProfile();
                 });
             }
             else {
@@ -290,11 +287,13 @@
             }
         }
 
-        function createUserProfile(attributeArray) {
+        function createUserProfile() {
             // if the user is also not found in backend database then create it
             if (sessionStorage.getItem("userFound") != "true") {
                 // console.log(attributeArray);
 
+                var idToken = localStorage.getItem("CognitoIdentityServiceProvider." + clientId + "." + userid + ".idToken");
+                var accessToken = localStorage.getItem("CognitoIdentityServiceProvider." + clientId + "." + userid + ".accessToken");
                 var API_URL = backendURL + '/profilemgmt';
                 var attributeJson = JSON.stringify(attributeArray);
                 // console.log(attributeJson);
@@ -313,7 +312,7 @@
                                 sessionStorage.setItem("userFound", "true");
                                 $("body").data("addprofile", data);
                                 // console.log(data);
-                                var checkMobile = localStorage.getItem("mobiledevice");
+
                                 if (checkMobile !== "true") {
                                     window.location.replace('/Prod/homepage');
                                 }
