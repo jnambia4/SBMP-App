@@ -104,10 +104,12 @@
                             switch (attributeName) {
                                 case roleAttribute:
                                     spColName = "UserRole";
+                                    sessionStorage.setItem("userrole", attributeValue);
                                     checkRole = true;
                                     break;
                                 case svcprAttribute:
                                     spColName = "SvcPrType";
+                                    sessionStorage.setItem("svcprtype", attributeValue);
                                     checkRole = true;
                                     break;
                                 case "name":
@@ -132,7 +134,7 @@
                         // console.log(attributeArray);
                         // console.log(checkRole);
 
-                        // if user is newly created in Cognito and doesnt have user role
+                        // if user is newly created in Cognito and doesn't have user role
                         if (!checkRole) {
                             $('#waitmsg').hide();
                             setUserRole();
